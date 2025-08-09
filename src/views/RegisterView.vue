@@ -176,9 +176,8 @@ const handleRegister = async () => {
       email: registerForm.email
     })
 
-    // For demo purposes, just redirect to home
-    // In a real app, you would register the user here
-    router.push('/')
+    // Redirect to personal info page after successful registration
+    router.push('/personal-info')
   } catch (error) {
     console.error('Registration failed:', error)
   } finally {
@@ -189,6 +188,8 @@ const handleRegister = async () => {
 const handleGoogleSignUp = () => {
   console.log('Google sign up clicked')
   // Implement Google OAuth registration logic
+  // After successful Google registration, also redirect to personal info
+  router.push('/personal-info')
 }
 
 const handleTermsClick = () => {
