@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
+
+const router = useRouter()
 
 // Status bar data
 const currentUser = ref({
@@ -25,6 +27,12 @@ onMounted(() => {
 const handleLogout = () => {
   console.log('Logout clicked')
   // Add logout logic here
+}
+
+const handleLogin = () => {
+  console.log('Logout clicked')
+  // Add logout logic here
+  router.push('/login')
 }
 </script>
 
@@ -59,7 +67,7 @@ const handleLogout = () => {
           <button @click="handleLogout" class="logout-btn">Abmelden</button>
         </div>
         <div v-else class="login-info">
-          <button class="login-btn">Anmelden</button>
+          <button @click="handleLogin" class="login-btn">Anmelden</button>
         </div>
       </div>
     </header>
