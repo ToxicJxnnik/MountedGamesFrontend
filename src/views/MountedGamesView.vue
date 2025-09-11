@@ -105,6 +105,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // TypeScript interfaces
 interface TournamentRound {
@@ -206,7 +209,7 @@ const pastTournaments = ref<PastTournament[]>([
 // Methods
 const handleRegister = (tournament: UpcomingTournament) => {
   console.log('Registering for tournament:', tournament.name)
-  // Add registration logic here
+  router.push('/tournament-registration')
 }
 
 onMounted(() => {

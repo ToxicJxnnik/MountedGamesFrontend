@@ -23,6 +23,11 @@ const router = createRouter({
       name: 'personal-info',
       component: () => import('../views/PersonalInfoView.vue'),
     },
+    {
+      path: '/tournament-registration',
+      name: 'tournament-registration',
+      component: () => import('../views/TournamentRegistrationView.vue'),
+    },
   ],
 })
 
