@@ -9,20 +9,20 @@ const router = createRouter({
       component: () => import('../views/MountedGamesView.vue'),
     },
     {
-      path: "/login",
-      name: "login",
+      path: '/login',
+      name: 'login',
       component: () => import('../views/LoginView.vue'),
     },
     {
-      path: "/register",
-      name: "register",
+      path: '/register',
+      name: 'register',
       component: () => import('../views/RegisterView.vue'),
     },
     {
-      path: "/personal-info",
-      name: "personal-info",
+      path: '/personal-info',
+      name: 'personal-info',
       component: () => import('../views/PersonalInfoView.vue'),
-    }
+    },
   ],
 })
 

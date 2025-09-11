@@ -1,6 +1,7 @@
 <template>
+  <title>sigma</title>
   <div class="mounted-games">
-        <!-- Main Content -->
+    <!-- Main Content -->
     <main class="main-content">
       <!-- Current Tournament Section -->
       <section class="current-tournament">
@@ -10,27 +11,27 @@
           <div class="tournament-details">
             <table class="tournament-table">
               <thead>
-              <tr>
-                <th>Turnier</th>
-                <th>Datum</th>
-                <th>Platz</th>
-                <th>Regelplatz</th>
-                <th>Details</th>
-              </tr>
+                <tr>
+                  <th>Turnier</th>
+                  <th>Datum</th>
+                  <th>Platz</th>
+                  <th>Regelplatz</th>
+                  <th>Details</th>
+                </tr>
               </thead>
               <tbody>
-              <tr v-for="round in currentTournament.rounds" :key="round.name">
-                <td>{{ round.name }}</td>
-                <td>{{ round.time }}</td>
-                <td>{{ round.place }}</td>
-                <td>Details</td>
-                <td>📧</td>
-              </tr>
-              <tr class="highlight">
-                <td colspan="2">Heat 1<br>Heat 2<br>Heat 3</td>
-                <td>30:10<br>30:30<br>10:00</td>
-                <td colspan="2"></td>
-              </tr>
+                <tr v-for="round in currentTournament.rounds" :key="round.name">
+                  <td>{{ round.name }}</td>
+                  <td>{{ round.time }}</td>
+                  <td>{{ round.place }}</td>
+                  <td>Details</td>
+                  <td>📧</td>
+                </tr>
+                <tr class="highlight">
+                  <td colspan="2">Heat 1<br />Heat 2<br />Heat 3</td>
+                  <td>30:10<br />30:30<br />10:00</td>
+                  <td colspan="2"></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -41,11 +42,19 @@
       <section class="upcoming-tournaments">
         <h2>Bevorstehende Turniere:</h2>
         <div class="tournament-cards">
-          <div v-for="tournament in upcomingTournaments" :key="tournament.name" class="tournament-card">
+          <div
+            v-for="tournament in upcomingTournaments"
+            :key="tournament.name"
+            class="tournament-card"
+          >
             <h3>{{ tournament.name }}</h3>
-            <p>{{ tournament.date }}<br>{{ tournament.location }}</p>
-            <p v-if="tournament.registrationDeadline">Anmelden bis: {{ tournament.registrationDeadline }}</p>
-            <p v-if="tournament.registrationStart">Anmelden ab: {{ tournament.registrationStart }}</p>
+            <p>{{ tournament.date }}<br />{{ tournament.location }}</p>
+            <p v-if="tournament.registrationDeadline">
+              Anmelden bis: {{ tournament.registrationDeadline }}
+            </p>
+            <p v-if="tournament.registrationStart">
+              Anmelden ab: {{ tournament.registrationStart }}
+            </p>
             <button
               v-if="tournament.canRegister"
               @click="handleRegister(tournament)"
@@ -53,20 +62,18 @@
             >
               Anmelden
             </button>
-            <button
-              v-else
-              class="register-btn"
-              disabled
-            >
+            <button v-else class="register-btn" disabled>
               Anmelden ab {{ tournament.registrationStart }}
             </button>
           </div>
         </div>
         <div class="account-notice">
-          <p>Bei neugierigen mit account →<br>
-            Anmelden Funktion<br>
-            Anmelden ohne Account →<br>
-            Popup "Anmelden oder Registrieren"</p>
+          <p>
+            Bei neugierigen mit account →<br />
+            Anmelden Funktion<br />
+            Anmelden ohne Account →<br />
+            Popup "Anmelden oder Registrieren"
+          </p>
         </div>
       </section>
 
@@ -75,20 +82,20 @@
         <h2>Vergangene Turniere:</h2>
         <table class="past-tournaments-table">
           <thead>
-          <tr>
-            <th>Turnier</th>
-            <th>Datum</th>
-            <th>Pferd</th>
-            <th>Platzierung</th>
-          </tr>
+            <tr>
+              <th>Turnier</th>
+              <th>Datum</th>
+              <th>Pferd</th>
+              <th>Platzierung</th>
+            </tr>
           </thead>
           <tbody>
-          <tr v-for="tournament in pastTournaments" :key="tournament.name + tournament.date">
-            <td>{{ tournament.name }}</td>
-            <td>{{ tournament.date }}</td>
-            <td>{{ tournament.horse }}</td>
-            <td>{{ tournament.placement }}</td>
-          </tr>
+            <tr v-for="tournament in pastTournaments" :key="tournament.name + tournament.date">
+              <td>{{ tournament.name }}</td>
+              <td>{{ tournament.date }}</td>
+              <td>{{ tournament.horse }}</td>
+              <td>{{ tournament.placement }}</td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -129,71 +136,71 @@ interface PastTournament {
 
 // Reactive data
 const currentTournament = ref<CurrentTournament>({
-  name: "Landesturnier Österreich, 2025 Q3 CPN",
+  name: 'Landesturnier Österreich, 2025 Q3 CPN',
   rounds: [
-    { name: "Qualifikationsrunde 1", time: "8:00", place: "Regelplatz 1" },
-    { name: "Qualifikationsrunde 2", time: "14:00", place: "Regelplatz 1" },
-    { name: "Qualifikationsrunde 3", time: "10:00", place: "Regelplatz 1" },
-    { name: "Halbfinale", time: "13:00", place: "Regelplatz 1" },
-    { name: "Finale", time: "12:00", place: "Regelplatz 1" }
-  ]
+    { name: 'Qualifikationsrunde 1', time: '8:00', place: 'Regelplatz 1' },
+    { name: 'Qualifikationsrunde 2', time: '14:00', place: 'Regelplatz 1' },
+    { name: 'Qualifikationsrunde 3', time: '10:00', place: 'Regelplatz 1' },
+    { name: 'Halbfinale', time: '13:00', place: 'Regelplatz 1' },
+    { name: 'Finale', time: '12:00', place: 'Regelplatz 1' },
+  ],
 })
 
 const upcomingTournaments = ref<UpcomingTournament[]>([
   {
-    name: "Oberösterr. Landesturnier",
-    date: "20.04.2025",
-    location: "Dandorf, Güstrow",
-    registrationDeadline: "Geben Sie 36",
-    canRegister: true
+    name: 'Oberösterr. Landesturnier',
+    date: '20.04.2025',
+    location: 'Dandorf, Güstrow',
+    registrationDeadline: 'Geben Sie 36',
+    canRegister: true,
   },
   {
-    name: "Reichenhaller Gemeindeturnier",
-    date: "12.12.2025",
-    location: "Dandorf, Güstrow",
-    registrationStart: "01.02.2025",
-    canRegister: false
+    name: 'Reichenhaller Gemeindeturnier',
+    date: '12.12.2025',
+    location: 'Dandorf, Güstrow',
+    registrationStart: '01.02.2025',
+    canRegister: false,
   },
   {
-    name: "Freistädter Race",
-    date: "15.03.2026",
-    location: "Dandorf, Güstrow",
-    registrationStart: "01.03.2026",
-    canRegister: false
-  }
+    name: 'Freistädter Race',
+    date: '15.03.2026',
+    location: 'Dandorf, Güstrow',
+    registrationStart: '01.03.2026',
+    canRegister: false,
+  },
 ])
 
 const pastTournaments = ref<PastTournament[]>([
   {
-    name: "Wildeshäuser Bezirksturnier 2024",
-    date: "16.06.2024",
-    horse: "Cara",
-    placement: "1. Platz"
+    name: 'Wildeshäuser Bezirksturnier 2024',
+    date: '16.06.2024',
+    horse: 'Cara',
+    placement: '1. Platz',
   },
   {
-    name: "Reichenhaller Mounted Games 2011",
-    date: "12.04.2011",
-    horse: "Elvira",
-    placement: "16. Platz"
+    name: 'Reichenhaller Mounted Games 2011',
+    date: '12.04.2011',
+    horse: 'Elvira',
+    placement: '16. Platz',
   },
   {
-    name: "Nordelbischer Solas Plus MG 2010",
-    date: "02.08.2010",
-    horse: "Stefan",
-    placement: "4. Platz"
+    name: 'Nordelbischer Solas Plus MG 2010',
+    date: '02.08.2010',
+    horse: 'Stefan',
+    placement: '4. Platz',
   },
   {
-    name: "Saarländischer Dorfmeisterschaft 2009",
-    date: "24.02.2009",
-    horse: "Sabine",
-    placement: "24. Platz"
+    name: 'Saarländischer Dorfmeisterschaft 2009',
+    date: '24.02.2009',
+    horse: 'Sabine',
+    placement: '24. Platz',
   },
   {
-    name: "Österr. Weihnachtsturnier 2009",
-    date: "31.01.2009",
-    horse: "Michael",
-    placement: "2. Platz"
-  }
+    name: 'Österr. Weihnachtsturnier 2009',
+    date: '31.01.2009',
+    horse: 'Michael',
+    placement: '2. Platz',
+  },
 ])
 
 // Methods
@@ -220,7 +227,7 @@ onMounted(() => {
   background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
   color: white;
   padding: 1rem 0;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .header-content {
@@ -254,8 +261,8 @@ onMounted(() => {
 }
 
 .dropdown-btn {
-  background: rgba(255,255,255,0.2);
-  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -264,7 +271,7 @@ onMounted(() => {
 }
 
 .dropdown-btn:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .main-content {
@@ -293,7 +300,7 @@ onMounted(() => {
   background: white;
   border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 1rem;
   color: #2c3e50;
 }
@@ -379,7 +386,7 @@ onMounted(() => {
   background: white;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border-collapse: collapse;
 }
 
@@ -402,7 +409,17 @@ onMounted(() => {
 }
 
 /* Ensure all text has good contrast */
-h1, h2, h3, h4, h5, h6, p, span, div, td, th {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div,
+td,
+th {
   color: #2c3e50;
 }
 
