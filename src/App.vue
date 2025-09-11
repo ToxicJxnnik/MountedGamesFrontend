@@ -1,41 +1,3 @@
-<script setup lang="ts">
-import { RouterLink, RouterView, useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
-
-const router = useRouter()
-
-// Status bar data
-const currentUser = ref({
-  name: 'Max Mustermann',
-  isLoggedIn: false
-})
-
-const systemStatus = ref({
-  serverStatus: 'Online',
-  lastUpdate: new Date().toLocaleTimeString('de-DE'),
-  activeUsers: 42
-})
-
-const updateTime = () => {
-  systemStatus.value.lastUpdate = new Date().toLocaleTimeString('de-DE')
-}
-
-onMounted(() => {
-  setInterval(updateTime, 1000)
-})
-
-const handleLogout = () => {
-  console.log('Logout clicked')
-  // Add logout logic here
-}
-
-const handleLogin = () => {
-  console.log('Logout clicked')
-  // Add logout logic here
-  router.push('/login')
-}
-</script>
-
 <template>
   <div id="app">
     <!-- Status Bar -->
@@ -46,12 +8,8 @@ const handleLogin = () => {
             <span class="status-dot"></span>
             Server: {{ systemStatus.serverStatus }}
           </span>
-          <span class="last-update">
-            Letzte Aktualisierung: {{ systemStatus.lastUpdate }}
-          </span>
-          <span class="active-users">
-            Aktive Benutzer: {{ systemStatus.activeUsers }}
-          </span>
+          <span class="last-update"> Letzte Aktualisierung: {{ systemStatus.lastUpdate }} </span>
+          <span class="active-users"> Aktive Benutzer: {{ systemStatus.activeUsers }} </span>
         </div>
       </div>
 
@@ -78,6 +36,44 @@ const handleLogin = () => {
     </main>
   </div>
 </template>
+
+<script setup lang="ts">
+import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+
+const router = useRouter()
+
+// Status bar data
+const currentUser = ref({
+  name: 'Max Mustermann',
+  isLoggedIn: false,
+})
+
+const systemStatus = ref({
+  serverStatus: 'Online',
+  lastUpdate: new Date().toLocaleTimeString('de-DE'),
+  activeUsers: 42,
+})
+
+const updateTime = () => {
+  systemStatus.value.lastUpdate = new Date().toLocaleTimeString('de-DE')
+}
+
+onMounted(() => {
+  setInterval(updateTime, 1000)
+})
+
+const handleLogout = () => {
+  console.log('Logout clicked')
+  // Add logout logic here
+}
+
+const handleLogin = () => {
+  console.log('Logout clicked')
+  // Add logout logic here
+  router.push('/login')
+}
+</script>
 
 <style scoped>
 #app {
