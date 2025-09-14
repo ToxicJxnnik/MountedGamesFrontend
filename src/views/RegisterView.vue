@@ -91,6 +91,10 @@
           </label>
         </div>
 
+        <div v-if="errorMessage" class="error-message global-error">
+          {{ errorMessage }}
+        </div>
+
         <button type="submit" class="register-btn" :disabled="isLoading || !isFormValid">
           {{ isLoading ? 'Registriere...' : 'Registrieren' }}
         </button>
@@ -125,6 +129,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 const router = useRouter()
 
@@ -139,6 +144,7 @@ const registerForm = reactive({
 })
 
 const isLoading = ref(false)
+const errorMessage = ref('')
 
 // Computed properties
 const passwordError = computed(() => {
@@ -164,22 +170,35 @@ const handleRegister = async () => {
     return
   }
 
+  // Clear any previous error messages
+  errorMessage.value = ''
   isLoading.value = true
 
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    // Import and use the registerUser function from auth store
+    const { registerUser } = await import('@/stores/auth')
 
-    console.log('Registration attempt:', {
-      firstName: registerForm.firstName,
-      lastName: registerForm.lastName,
-      email: registerForm.email
-    })
+    const result = await registerUser(
+      registerForm.email,
+      registerForm.password,
+      registerForm.firstName,
+      registerForm.lastName
+    )
+
+    console.log('Registration successful:', result)
+
+    // Store the token in localStorage for future API calls
+    localStorage.setItem('auth_token', result.token)
 
     // Redirect to personal info page after successful registration
     router.push('/personal-info')
   } catch (error) {
     console.error('Registration failed:', error)
+    if (axios.isAxiosError(error)) {
+      errorMessage.value = error.response?.data?.message || 'Registration failed. Please try again.'
+    } else {
+      errorMessage.value = 'An unexpected error occurred. Please try again.'
+    }
   } finally {
     isLoading.value = false
   }
@@ -423,5 +442,20 @@ const handlePrivacyClick = () => {
     grid-template-columns: 1fr;
     gap: 0;
   }
+}
+
+.error-message {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.global-error {
+  background-color: #fff5f5;
+  border: 1px solid #fed7d7;
+  border-radius: 4px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 </style>
