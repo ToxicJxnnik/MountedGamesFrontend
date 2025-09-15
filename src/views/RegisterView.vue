@@ -91,12 +91,12 @@
           </label>
         </div>
 
-        <div v-if="errorMessage" class="error-message global-error">
-          {{ errorMessage }}
+        <div v-if="authStore.error" class="error-message global-error">
+          {{ authStore.error }}
         </div>
 
-        <button type="submit" class="register-btn" :disabled="isLoading || !isFormValid">
-          {{ isLoading ? 'Registriere...' : 'Registrieren' }}
+        <button type="submit" class="register-btn" :disabled="authStore.isLoading || !isFormValid">
+          {{ authStore.isLoading ? 'Registriere...' : 'Registrieren' }}
         </button>
       </form>
 
@@ -127,11 +127,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { reactive, computed } from 'vue' // removed 'ref' import
 import { useRouter } from 'vue-router'
-import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 // Form data
 const registerForm = reactive({
@@ -142,9 +143,6 @@ const registerForm = reactive({
   confirmPassword: '',
   acceptTerms: false
 })
-
-const isLoading = ref(false)
-const errorMessage = ref('')
 
 // Computed properties
 const passwordError = computed(() => {
@@ -170,37 +168,21 @@ const handleRegister = async () => {
     return
   }
 
-  // Clear any previous error messages
-  errorMessage.value = ''
-  isLoading.value = true
-
   try {
-    // Import and use the registerUser function from auth store
-    const { registerUser } = await import('@/stores/auth')
-
-    const result = await registerUser(
+    await authStore.register(
       registerForm.email,
       registerForm.password,
       registerForm.firstName,
       registerForm.lastName
     )
 
-    console.log('Registration successful:', result)
-
-    // Store the token in localStorage for future API calls
-    localStorage.setItem('auth_token', result.token)
-
+    console.log('Registration successful')
+    
     // Redirect to personal info page after successful registration
     router.push('/personal-info')
   } catch (error) {
     console.error('Registration failed:', error)
-    if (axios.isAxiosError(error)) {
-      errorMessage.value = error.response?.data?.message || 'Registration failed. Please try again.'
-    } else {
-      errorMessage.value = 'An unexpected error occurred. Please try again.'
-    }
-  } finally {
-    isLoading.value = false
+    // Error is already stored in authStore.error
   }
 }
 
