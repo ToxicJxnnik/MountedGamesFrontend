@@ -136,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
 import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -177,17 +177,26 @@ const handleSave = async () => {
   isLoading.value = true
 
   try {
-    await axios
-      .post('http://localhost:8080/api/information/update', personalForm, {
-        headers: {
-          Authorization: `Bearer ${useAuthStore().token}`,
-        },
-      })
-      .then((response) => {
-        if (response.status !== 200) {
-          throw new Error('Failed to save personal information')
-        }
-      })
+    // Map frontend form data to backend expected format
+    const requestData = {
+      FirstName: personalForm.firstName,
+      LastName: personalForm.lastName,
+      DateOfBirth: personalForm.birthDate,
+      Nationality: personalForm.nationality,
+      PhoneNumber: personalForm.phone,
+      Club: personalForm.club,
+      FinNumber: personalForm.membershipNumber,
+      Role: personalForm.role,
+    }
+
+    console.log('Sending request data:', requestData)
+
+    await axios.post('http://localhost:8080/api/information/update', requestData, {
+      headers: {
+        Authorization: `Bearer ${useAuthStore().token}`,
+        'Content-Type': 'application/json',
+      },
+    })
 
     // Show success message or redirect
     alert('Persönliche Informationen erfolgreich gespeichert!')

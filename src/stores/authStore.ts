@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { authService } from '@/services/authService' // assuming your auth service is in services folder
+import { authService } from '@/services/authService'
 import { setCookie, deleteCookie, getCookie } from '@/utils/cookies'
 
 interface User {
@@ -11,9 +11,9 @@ interface User {
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  // State
+  // State - Initialize token from cookie instead of localStorage
   const user = ref<User | null>(null)
-  const token = ref<string | null>(localStorage.getItem('auth_token'))
+  const token = ref<string | null>(getCookie('auth_token') || null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
@@ -62,6 +62,8 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = response.user
       token.value = response.token
       setCookie('auth_token', response.token)
+      // Also store user info in cookie for easier retrieval
+      setCookie('user_info', JSON.stringify(response.user))
 
       return response
     } catch (err: unknown) {
@@ -83,6 +85,8 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = response.user
       token.value = response.token
       setCookie('auth_token', response.token)
+      // Also store user info in cookie for easier retrieval
+      setCookie('user_info', JSON.stringify(response.user))
 
       return response
     } catch (err: unknown) {
@@ -103,6 +107,7 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = null
       token.value = null
       deleteCookie('auth_token')
+      deleteCookie('user_info')
     }
   }
 
@@ -112,6 +117,8 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const userData = await authService.getCurrentUser()
       user.value = userData
+      // Update user info in cookie
+      setCookie('user_info', JSON.stringify(userData))
       return userData
     } catch (err: unknown) {
       console.error('Get current user error:', err)
@@ -139,22 +146,29 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Initialize auth state on store creation
   const initAuth = async () => {
-    if (token.value) {
-      try {
-        await getCurrentUser()
-      } catch (err: unknown) {
-        console.error('Failed to initialize auth:', err)
-        // If token is invalid, clear everything
-        await logout()
-      }
-    } else {
-      // Try to get user info from cookie if token exists but user doesn't
+    // Get token from cookie
+    const cookieToken = getCookie('auth_token')
+    if (cookieToken) {
+      token.value = cookieToken
+
+      // Try to get user info from cookie first
       const userInfoCookie = getCookie('user_info')
-      if (userInfoCookie && token.value) {
+      if (userInfoCookie) {
         try {
           user.value = JSON.parse(userInfoCookie)
         } catch (err) {
           console.error('Failed to parse user info from cookie:', err)
+        }
+      }
+
+      // If we have token but no user, fetch user from API
+      if (!user.value) {
+        try {
+          await getCurrentUser()
+        } catch (err: unknown) {
+          console.error('Failed to initialize auth:', err)
+          // If token is invalid, clear everything
+          await logout()
         }
       }
     }

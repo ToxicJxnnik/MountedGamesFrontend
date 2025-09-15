@@ -27,9 +27,17 @@
             <div class="user-avatar">
               {{ userInitials }}
             </div>
-            <span class="welcome-text">Willkommen, {{ authStore.user.firstName }} {{ authStore.user.lastName }}</span>
-            <svg class="dropdown-icon" :class="{ 'rotated': showDropdown }" width="16" height="16" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M7 10l5 5 5-5z"/>
+            <span class="welcome-text"
+              >Willkommen, {{ authStore.user.firstName }} {{ authStore.user.lastName }}</span
+            >
+            <svg
+              class="dropdown-icon"
+              :class="{ rotated: showDropdown }"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+            >
+              <path fill="currentColor" d="M7 10l5 5 5-5z" />
             </svg>
           </div>
 
@@ -39,28 +47,39 @@
               <div class="dropdown-user-info">
                 <div class="dropdown-avatar">{{ userInitials }}</div>
                 <div class="dropdown-details">
-                  <div class="dropdown-name">{{ authStore.user.firstName }} {{ authStore.user.lastName }}</div>
+                  <div class="dropdown-name">
+                    {{ authStore.user.firstName }} {{ authStore.user.lastName }}
+                  </div>
                   <div class="dropdown-email">{{ authStore.user.email }}</div>
                 </div>
               </div>
             </div>
-            <hr class="dropdown-divider">
+            <hr class="dropdown-divider" />
             <router-link to="/profile" class="dropdown-item" @click="closeDropdown">
               <svg width="16" height="16" viewBox="0 0 24 24" class="dropdown-item-icon">
-                <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                <path
+                  fill="currentColor"
+                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                />
               </svg>
               Profil
             </router-link>
             <router-link to="/settings" class="dropdown-item" @click="closeDropdown">
               <svg width="16" height="16" viewBox="0 0 24 24" class="dropdown-item-icon">
-                <path fill="currentColor" d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97c0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1c0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z"/>
+                <path
+                  fill="currentColor"
+                  d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97c0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1c0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z"
+                />
               </svg>
               Einstellungen
             </router-link>
-            <hr class="dropdown-divider">
+            <hr class="dropdown-divider" />
             <button @click="handleLogout" class="dropdown-item logout-item">
               <svg width="16" height="16" viewBox="0 0 24 24" class="dropdown-item-icon">
-                <path fill="currentColor" d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                <path
+                  fill="currentColor"
+                  d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"
+                />
               </svg>
               Abmelden
             </button>
@@ -84,7 +103,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/stores/authStore'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -141,8 +160,8 @@ const handleLogin = () => {
 // Close dropdown when clicking outside
 const handleClickOutside = (event: Event) => {
   if (
-    showDropdown.value && 
-    userMenuTrigger.value && 
+    showDropdown.value &&
+    userMenuTrigger.value &&
     dropdownMenu.value &&
     !userMenuTrigger.value.contains(event.target as Node) &&
     !dropdownMenu.value.contains(event.target as Node)
@@ -154,10 +173,10 @@ const handleClickOutside = (event: Event) => {
 onMounted(() => {
   // Initialize auth state
   authStore.initAuth()
-  
+
   // Set up time update interval
   setInterval(updateTime, 1000)
-  
+
   // Set up click outside handler
   document.addEventListener('click', handleClickOutside)
 })

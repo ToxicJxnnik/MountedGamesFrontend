@@ -67,14 +67,6 @@
             </button>
           </div>
         </div>
-        <div class="account-notice">
-          <p>
-            Bei neugierigen mit account →<br />
-            Anmelden Funktion<br />
-            Anmelden ohne Account →<br />
-            Popup "Anmelden oder Registrieren"
-          </p>
-        </div>
       </section>
 
       <!-- Past Tournaments Section -->
