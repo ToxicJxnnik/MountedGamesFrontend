@@ -394,14 +394,14 @@ const handlePrivacyClick = () => {
 }
 
 .login-link-text {
-  color: #4a90e2;
+  color: #0077ff;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
 }
 
 .login-link-text:hover {
-  color: #357abd;
+  color: #0080ff;
   text-decoration: underline;
 }
 

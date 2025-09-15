@@ -23,8 +23,12 @@
                 <td>{{ round.name }}</td>
                 <td>{{ round.time }}</td>
                 <td>{{ round.place }}</td>
-                <td>Details</td>
-                <td>📧</td>
+                <td><router-link to="/tournament-details" class="login-link-text">
+            Details
+          </router-link></td>
+                <td><router-link to="/tournament-details" class="login-link-text">
+            Details
+          </router-link></td>
               </tr>
               <tr class="highlight">
                 <td colspan="2">Heat 1<br>Heat 2<br>Heat 3</td>
@@ -51,7 +55,7 @@
               @click="handleRegister(tournament)"
               class="register-btn"
             >
-              Anmelden
+              <router-link to="/tournament-login" class="login-link-text"> Anmelden </router-link>
             </button>
             <button
               v-else
@@ -407,6 +411,21 @@ h1, h2, h3, h4, h5, h6, p, span, div, td, th {
 }
 
 @media (max-width: 768px) {
+.login-link-text {
+  color: #0077ff;        /* default link color */
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.login-link-text:hover {
+  color: #0080ff;        /* hover color */
+  text-decoration: underline;
+}
+
+.login-link-text:visited {
+  color: #0056b3;        /* override browser green visited color */
+}
   .header-content {
     flex-direction: column;
     gap: 1rem;
@@ -425,12 +444,12 @@ h1, h2, h3, h4, h5, h6, p, span, div, td, th {
   .past-tournaments-table {
     font-size: 0.9rem;
   }
-
+}
   .tournament-table th,
   .tournament-table td,
   .past-tournaments-table th,
   .past-tournaments-table td {
     padding: 0.5rem;
   }
-}
+
 </style>
