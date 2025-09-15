@@ -109,11 +109,7 @@
 
           <div class="form-group">
             <label for="role" class="form-label">Rolle:</label>
-            <select
-              id="role"
-              v-model="personalForm.role"
-              class="form-select"
-            >
+            <select id="role" v-model="personalForm.role" class="form-select">
               <option value="">Bitte wählen...</option>
               <option value="rider">Reiter/in</option>
               <option value="trainer">Trainer/in</option>
@@ -127,19 +123,10 @@
 
         <!-- Form Actions -->
         <div class="form-actions">
-          <button
-            type="button"
-            @click="handleDiscard"
-            class="discard-btn"
-            :disabled="isLoading"
-          >
+          <button type="button" @click="handleDiscard" class="discard-btn" :disabled="isLoading">
             Verwerfen
           </button>
-          <button
-            type="submit"
-            class="save-btn"
-            :disabled="isLoading || !isFormValid"
-          >
+          <button type="submit" class="save-btn" :disabled="isLoading || !isFormValid">
             {{ isLoading ? 'Speichert...' : 'Speichern' }}
           </button>
         </div>
@@ -149,6 +136,8 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/authStore'
+import axios from 'axios'
 import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -163,18 +152,20 @@ const personalForm = reactive({
   phone: '',
   club: '',
   membershipNumber: '',
-  role: ''
+  role: '',
 })
 
 const isLoading = ref(false)
 
 // Computed properties
 const isFormValid = computed(() => {
-  return personalForm.firstName &&
+  return (
+    personalForm.firstName &&
     personalForm.lastName &&
     personalForm.birthDate &&
     personalForm.nationality &&
     personalForm.club
+  )
 })
 
 // Methods
@@ -186,10 +177,26 @@ const handleSave = async () => {
   isLoading.value = true
 
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    // Map frontend form data to backend expected format
+    const requestData = {
+      FirstName: personalForm.firstName,
+      LastName: personalForm.lastName,
+      DateOfBirth: personalForm.birthDate,
+      Nationality: personalForm.nationality,
+      PhoneNumber: personalForm.phone,
+      Club: personalForm.club,
+      FinNumber: personalForm.membershipNumber,
+      Role: personalForm.role,
+    }
 
-    console.log('Personal information saved:', personalForm)
+    console.log('Sending request data:', requestData)
+
+    await axios.post('http://localhost:8080/api/information/update', requestData, {
+      headers: {
+        Authorization: `Bearer ${useAuthStore().token}`,
+        'Content-Type': 'application/json',
+      },
+    })
 
     // Show success message or redirect
     alert('Persönliche Informationen erfolgreich gespeichert!')

@@ -1,3 +1,4 @@
+// components/WelcomeItem.vue
 <template>
   <div class="item">
     <i>
