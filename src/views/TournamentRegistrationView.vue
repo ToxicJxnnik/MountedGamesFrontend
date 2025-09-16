@@ -2,44 +2,44 @@
   <div class="tournament-registration-container">
     <div class="registration-card">
       <div class="card-header">
-        <h1 class="title">Turnieranmeldung</h1>
-        <p class="subtitle">Reiter anmelden für das Oberösterreich Landesturnier</p>
+        <h1 class="title">{{ $t('tournament.tournamentRegistration') }}</h1>
+        <p class="subtitle">{{ $t('tournament.registerRiderSubtitle') }}</p>
       </div>
 
       <form @submit.prevent="handleRegistration" class="registration-form">
         <!-- Rider Information -->
         <div class="section">
-          <h3 class="section-title">Reiterinformationen</h3>
+          <h3 class="section-title">{{ $t('registration.riderInformation') }}</h3>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="riderName" class="form-label">Name des Reiters</label>
+              <label for="riderName" class="form-label">{{ $t('registration.riderName') }}</label>
               <input
                 id="riderName"
                 v-model="form.riderName"
                 type="text"
                 class="form-input readonly-input"
                 readonly
-                title="Wird automatisch aus Ihren Kontodaten übernommen"
+                :title="$t('registration.autoFromAccount')"
               />
             </div>
 
             <div class="form-group">
-              <label for="birthDate" class="form-label">Geburtsdatum</label>
+              <label for="birthDate" class="form-label">{{ $t('registration.birthDate') }}</label>
               <input
                 id="birthDate"
                 v-model="form.birthDate"
                 type="date"
                 class="form-input readonly-input"
                 readonly
-                title="Wird automatisch aus Ihren Kontodaten übernommen"
+                :title="$t('registration.autoFromAccount')"
               />
             </div>
           </div>
 
           <!-- Age Category Selection -->
           <div class="form-group">
-            <label class="form-label">Altersgruppe*</label>
+            <label class="form-label">{{ $t('registration.ageCategory') }}</label>
             <div class="age-category-grid">
               <div
                 v-for="category in ageCategories"
@@ -48,8 +48,12 @@
                 :class="{ active: form.ageCategory === category.value }"
                 @click="form.ageCategory = category.value"
               >
-                <span class="category-label">{{ category.label }}</span>
-                <span class="category-description">{{ category.description }}</span>
+                <span class="category-label">{{
+                  $t(`registration.ageCategories.${category.value}`)
+                }}</span>
+                <span class="category-description">{{
+                  $t(`registration.ageCategories.${category.value}Description`)
+                }}</span>
               </div>
             </div>
           </div>
@@ -57,16 +61,16 @@
 
         <!-- Horse Information -->
         <div class="section">
-          <h3 class="section-title">Pferdinformationen</h3>
+          <h3 class="section-title">{{ $t('registration.horseInformation') }}</h3>
 
           <div class="form-group">
-            <label for="horseName" class="form-label">Name des Pferdes*</label>
+            <label for="horseName" class="form-label">{{ $t('registration.horseName') }}</label>
             <input
               id="horseName"
               v-model="form.horseName"
               type="text"
               class="form-input"
-              placeholder="z.B. Mystique High Batman"
+              :placeholder="$t('registration.horseNamePlaceholder')"
               required
             />
           </div>
@@ -74,13 +78,13 @@
 
         <!-- Location Requirements -->
         <div class="section">
-          <h3 class="section-title">Platzbedarf</h3>
+          <h3 class="section-title">{{ $t('registration.spaceRequirements') }}</h3>
 
           <div class="location-grid">
             <div class="location-item">
-              <label for="stallSpaces" class="location-label">
-                Stellplätze benötigt
-              </label>
+              <label for="stallSpaces" class="location-label">{{
+                $t('registration.stallSpaces')
+              }}</label>
               <input
                 id="stallSpaces"
                 v-model.number="form.stallSpaces"
@@ -88,14 +92,14 @@
                 class="location-input"
                 min="0"
                 max="10"
-                placeholder="Anzahl"
+                :placeholder="$t('registration.quantity')"
               />
             </div>
 
             <div class="location-item">
-              <label for="campingSpaces" class="location-label">
-                Campingplätze benötigt
-              </label>
+              <label for="campingSpaces" class="location-label">{{
+                $t('registration.campingSpaces')
+              }}</label>
               <input
                 id="campingSpaces"
                 v-model.number="form.campingSpaces"
@@ -103,14 +107,14 @@
                 class="location-input"
                 min="0"
                 max="10"
-                placeholder="Anzahl"
+                :placeholder="$t('registration.quantity')"
               />
             </div>
 
             <div class="location-item">
-              <label for="chargingSpaces" class="location-label">
-                E-Ladeplätze benötigt
-              </label>
+              <label for="chargingSpaces" class="location-label">{{
+                $t('registration.chargingSpaces')
+              }}</label>
               <input
                 id="chargingSpaces"
                 v-model.number="form.chargingSpaces"
@@ -118,7 +122,7 @@
                 class="location-input"
                 min="0"
                 max="5"
-                placeholder="Anzahl"
+                :placeholder="$t('registration.quantity')"
               />
             </div>
           </div>
@@ -126,27 +130,38 @@
 
         <!-- Additional Information -->
         <div class="section">
-          <h3 class="section-title">Zusätzliche Informationen</h3>
+          <h3 class="section-title">{{ $t('registration.additionalInformation') }}</h3>
 
           <div class="form-group">
-            <label for="comments" class="form-label">Besondere Wünsche oder Anmerkungen</label>
+            <label for="comments" class="form-label">{{ $t('registration.specialWishes') }}</label>
             <textarea
               id="comments"
               v-model="form.comments"
               class="form-textarea"
               rows="4"
-              placeholder="Hier können Sie besondere Wünsche oder wichtige Informationen für die Turnierorganisation eintragen..."
+              :placeholder="$t('registration.specialWishesPlaceholder')"
             ></textarea>
+          </div>
+        </div>
+
+        <!-- Error Display -->
+        <div v-if="errorMessage" class="error-message">
+          <h4>{{ $t('registration.registrationError') }}</h4>
+          <p>{{ errorMessage }}</p>
+          <div v-if="errorDetails" class="error-details">
+            <pre>{{ errorDetails }}</pre>
           </div>
         </div>
 
         <!-- Form Actions -->
         <div class="form-actions">
           <button type="button" class="btn btn-secondary" @click="handleCancel">
-            Abbrechen
+            {{ $t('registration.cancel') }}
           </button>
-          <button type="submit" class="btn btn-primary" :disabled="!isFormValid">
-            Anmeldung einreichen
+          <button type="submit" class="btn btn-primary" :disabled="!isFormValid || isSubmitting">
+            {{
+              isSubmitting ? $t('registration.submitting') : $t('registration.submitRegistration')
+            }}
           </button>
         </div>
       </form>
@@ -156,19 +171,28 @@
     <div v-if="showSuccessModal" class="modal-overlay" @click="closeSuccessModal">
       <div class="modal-content" @click.stop>
         <div class="success-icon">✓</div>
-        <h3>Anmeldung erfolgreich!</h3>
-        <p>Ihre Turnieranmeldung wurde erfolgreich eingereicht. Sie erhalten in Kürze eine Bestätigung per E-Mail.</p>
-        <button class="btn btn-primary" @click="closeSuccessModal">OK</button>
+        <h3>{{ $t('registration.registrationSuccess') }}</h3>
+        <p>
+          {{ $t('registration.registrationSuccessMessage') }}
+        </p>
+        <button class="btn btn-primary" @click="closeSuccessModal">
+          {{ $t('registration.ok') }}
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import axios from 'axios'
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
+import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
+const authStore = useAuthStore()
+const { t } = useI18n()
 
 interface RegistrationForm {
   riderName: string
@@ -189,52 +213,122 @@ const form = ref<RegistrationForm>({
   stallSpaces: 0,
   campingSpaces: 0,
   chargingSpaces: 0,
-  comments: ''
+  comments: '',
 })
 
 const showSuccessModal = ref(false)
+const isSubmitting = ref(false)
+const errorMessage = ref('')
+const errorDetails = ref('')
 
 const ageCategories = [
   {
     value: 'U14',
-    label: 'U14',
-    description: 'bis 13 Jahre'
   },
   {
     value: 'U16',
-    label: 'U16',
-    description: '14-15 Jahre'
   },
   {
     value: 'U18',
-    label: 'U18',
-    description: '16-17 Jahre'
   },
   {
     value: 'OFFEN',
-    label: 'Offen',
-    description: 'ab 18 Jahre'
-  }
+  },
 ]
 
 const isFormValid = computed(() => {
-  // values from acc
-  return form.value.ageCategory !== '' &&
-         form.value.horseName.trim() !== ''
+  return form.value.ageCategory !== '' && form.value.horseName.trim() !== ''
 })
+
+// Get JWT token from localStorage (adjust based on your auth implementation)
+const getAuthToken = () => {
+  return authStore.token
+}
 
 const handleRegistration = async () => {
   if (!isFormValid.value) return
 
-  try {
-    // fake success
-    console.log('Registration data:', form.value)
-    await new Promise(resolve => setTimeout(resolve, 1000))
+  // Clear previous errors
+  errorMessage.value = ''
+  errorDetails.value = ''
+  isSubmitting.value = true
 
+  try {
+    // Get auth token
+    const token = getAuthToken()
+    if (!token) {
+      errorMessage.value = t('registration.errors.mustBeLoggedIn')
+      isSubmitting.value = false
+      return
+    }
+
+    // Prepare the request data - only send fields that backend expects
+    const registrationData = {
+      ageCategory: form.value.ageCategory,
+      horseName: form.value.horseName,
+      stallSpaces: form.value.stallSpaces,
+      campingSpaces: form.value.campingSpaces,
+      chargingSpaces: form.value.chargingSpaces,
+      comments: form.value.comments,
+    }
+
+    console.log('Sending registration data:', registrationData)
+
+    // Make the API call with authentication headers
+    const response = await axios.post(
+      'http://localhost:8080/api/event/1/register',
+      registrationData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+
+    console.log('Registration successful:', response.data)
     showSuccessModal.value = true
-  } catch (error) {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     console.error('Registration failed:', error)
-    // Handle error (show error message)
+
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      console.log('Error status:', error.response.status)
+      console.log('Error data:', error.response.data)
+
+      if (error.response.status === 401) {
+        errorMessage.value = t('auth.sessionExpired')
+      } else if (error.response.status === 400) {
+        // Show validation errors
+        if (error.response.data.errors) {
+          const errors = Object.entries(error.response.data.errors)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .map(([field, messages]: [string, any]) => `${field}: ${messages.join(', ')}`)
+            .join('\n')
+          errorMessage.value = t('registration.errors.validationError')
+          errorDetails.value = errors
+        } else {
+          errorMessage.value = error.response.data.message || 'Ungültige Anfrage'
+          errorDetails.value = JSON.stringify(error.response.data, null, 2)
+        }
+      } else {
+        errorMessage.value = t('registration.errors.serverError', {
+          status: error.response.status,
+          message: error.response.data.message || 'Unbekannter Fehler',
+        })
+        errorDetails.value = JSON.stringify(error.response.data, null, 2)
+      }
+    } else if (error.request) {
+      // The request was made but no response was received
+      errorMessage.value = t('registration.errors.noResponse')
+    } else {
+      // Something happened in setting up the request
+      errorMessage.value = t('registration.errors.requestError', { message: error.message })
+    }
+  } finally {
+    isSubmitting.value = false
   }
 }
 
@@ -246,10 +340,10 @@ const closeSuccessModal = () => {
   showSuccessModal.value = false
   router.push('/')
 }
-
 </script>
 
 <style scoped>
+/* All previous styles remain the same */
 .tournament-registration-container {
   min-height: 100vh;
   background-color: #ffffff;
@@ -350,14 +444,6 @@ const closeSuccessModal = () => {
   border-color: #ddd;
 }
 
-.input-note {
-  display: block;
-  font-size: 0.8rem;
-  color: #6c757d;
-  margin-top: 0.25rem;
-  font-style: italic;
-}
-
 .form-textarea {
   width: 100%;
   padding: 0.75rem;
@@ -451,6 +537,40 @@ const closeSuccessModal = () => {
 .location-input:focus {
   outline: none;
   border-color: #4a90e2;
+}
+
+/* New error styling */
+.error-message {
+  background-color: #ffeaa7;
+  border: 1px solid #fdcb6e;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.error-message h4 {
+  color: #e17055;
+  margin: 0 0 0.5rem 0;
+}
+
+.error-message p {
+  color: #2d3436;
+  margin: 0 0 0.5rem 0;
+}
+
+.error-details {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.error-details pre {
+  margin: 0;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .form-actions {

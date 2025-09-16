@@ -1,14 +1,14 @@
 <template>
   <div class="personal-info-container">
     <div class="personal-info-card">
-      <h2 class="form-title">Persönliche Informationen</h2>
+      <h2 class="form-title">{{ $t('personalInfo.title') }}</h2>
 
       <form @submit.prevent="handleSave" class="personal-info-form">
         <!-- Personal Information Section -->
         <div class="form-section">
           <div class="form-row">
             <div class="form-group">
-              <label for="firstName" class="form-label">Vorname *</label>
+              <label for="firstName" class="form-label">{{ $t('personalInfo.firstName') }}</label>
               <input
                 id="firstName"
                 v-model="personalForm.firstName"
@@ -19,7 +19,7 @@
             </div>
 
             <div class="form-group">
-              <label for="lastName" class="form-label">Nachname *</label>
+              <label for="lastName" class="form-label">{{ $t('personalInfo.lastName') }}</label>
               <input
                 id="lastName"
                 v-model="personalForm.lastName"
@@ -32,7 +32,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="birthDate" class="form-label">Geburtsdatum *</label>
+              <label for="birthDate" class="form-label">{{ $t('personalInfo.birthDate') }}</label>
               <input
                 id="birthDate"
                 v-model="personalForm.birthDate"
@@ -43,80 +43,84 @@
             </div>
 
             <div class="form-group">
-              <label for="nationality" class="form-label">Nationalität *</label>
+              <label for="nationality" class="form-label">{{
+                $t('personalInfo.nationality')
+              }}</label>
               <select
                 id="nationality"
                 v-model="personalForm.nationality"
                 class="form-select"
                 required
               >
-                <option value="">Bitte wählen...</option>
-                <option value="DE">Deutschland</option>
-                <option value="AT">Österreich</option>
-                <option value="CH">Schweiz</option>
-                <option value="FR">Frankreich</option>
-                <option value="IT">Italien</option>
-                <option value="NL">Niederlande</option>
-                <option value="BE">Belgien</option>
-                <option value="DK">Dänemark</option>
-                <option value="SE">Schweden</option>
-                <option value="NO">Norwegen</option>
-                <option value="other">Andere</option>
+                <option value="">{{ $t('personalInfo.pleaseSelect') }}</option>
+                <option value="DE">{{ $t('personalInfo.countries.DE') }}</option>
+                <option value="AT">{{ $t('personalInfo.countries.AT') }}</option>
+                <option value="CH">{{ $t('personalInfo.countries.CH') }}</option>
+                <option value="FR">{{ $t('personalInfo.countries.FR') }}</option>
+                <option value="IT">{{ $t('personalInfo.countries.IT') }}</option>
+                <option value="NL">{{ $t('personalInfo.countries.NL') }}</option>
+                <option value="BE">{{ $t('personalInfo.countries.BE') }}</option>
+                <option value="DK">{{ $t('personalInfo.countries.DK') }}</option>
+                <option value="SE">{{ $t('personalInfo.countries.SE') }}</option>
+                <option value="NO">{{ $t('personalInfo.countries.NO') }}</option>
+                <option value="other">{{ $t('personalInfo.countries.other') }}</option>
               </select>
             </div>
           </div>
 
           <div class="form-group">
-            <label for="phone" class="form-label">Telefonnummer</label>
+            <label for="phone" class="form-label">{{ $t('personalInfo.phone') }}</label>
             <input
               id="phone"
               v-model="personalForm.phone"
               type="tel"
               class="form-input"
-              placeholder="+49 123 456789"
+              :placeholder="$t('personalInfo.phonePlaceholder')"
             />
           </div>
         </div>
 
         <!-- Club and Membership Information Section -->
         <div class="form-section">
-          <h3 class="section-title">Vereins- und Mitgliedsinformationen</h3>
+          <h3 class="section-title">{{ $t('personalInfo.clubAndMembership') }}</h3>
 
           <div class="form-group">
-            <label for="club" class="form-label">Verein/Club *</label>
+            <label for="club" class="form-label">{{ $t('personalInfo.club') }}</label>
             <input
               id="club"
               v-model="personalForm.club"
               type="text"
               class="form-input"
-              placeholder="Name Ihres Reitvereins"
+              :placeholder="$t('personalInfo.clubPlaceholder')"
               required
             />
-            <p class="form-note">Vereinszugehörigkeit wird bei Turnieren angezeigt</p>
+            <p class="form-note">{{ $t('personalInfo.clubNote') }}</p>
           </div>
 
           <div class="form-group">
-            <label for="membershipNumber" class="form-label">Mitgliedsnummer</label>
+            <label for="membershipNumber" class="form-label">{{
+              $t('personalInfo.membershipNumber')
+            }}</label>
             <input
               id="membershipNumber"
               v-model="personalForm.membershipNumber"
               type="text"
               class="form-input"
-              placeholder="z.B. FN-Mitgliedsnummer"
+              :placeholder="$t('personalInfo.membershipPlaceholder')"
             />
-            <p class="form-note">Für deutsche/österreichische Reiter erforderlich</p>
+            <p class="form-note">{{ $t('personalInfo.membershipNote') }}</p>
           </div>
 
           <div class="form-group">
-            <label for="role" class="form-label">Rolle:</label>
+            <label for="role" class="form-label">{{ $t('personalInfo.role') }}</label>
             <select id="role" v-model="personalForm.role" class="form-select">
-              <option value="">Bitte wählen...</option>
-              <option value="rider">Reiter/in</option>
-              <option value="trainer">Trainer/in</option>
-              <option value="official">Offizieller</option>
-              <option value="volunteer">Helfer/in</option>
-              <option value="parent">Elternteil</option>
-              <option value="other">Andere</option>
+              <option value="">{{ $t('personalInfo.pleaseSelect') }}</option>
+              <option value="rider">{{ $t('personalInfo.roles.rider') }}</option>
+              <option value="trainer">{{ $t('personalInfo.roles.trainer') }}</option>
+              <option value="official">{{ $t('personalInfo.roles.official') }}</option>
+              <option value="volunteer">{{ $t('personalInfo.roles.volunteer') }}</option>
+              <option value="parent">{{ $t('personalInfo.roles.parent') }}</option>
+              <option value="other">{{ $t('personalInfo.roles.other') }}</option>
             </select>
           </div>
         </div>
@@ -124,10 +128,10 @@
         <!-- Form Actions -->
         <div class="form-actions">
           <button type="button" @click="handleDiscard" class="discard-btn" :disabled="isLoading">
-            Verwerfen
+            {{ $t('personalInfo.discard') }}
           </button>
           <button type="submit" class="save-btn" :disabled="isLoading || !isFormValid">
-            {{ isLoading ? 'Speichert...' : 'Speichern' }}
+            {{ isLoading ? $t('personalInfo.saving') : $t('personalInfo.save') }}
           </button>
         </div>
       </form>
@@ -140,8 +144,10 @@ import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
 import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
+const { t } = useI18n()
 
 // Form data
 const personalForm = reactive({
@@ -198,14 +204,11 @@ const handleSave = async () => {
       },
     })
 
-    // Show success message or redirect
-    alert('Persönliche Informationen erfolgreich gespeichert!')
-
     // Redirect to the main mounted games view
     router.push('/')
   } catch (error) {
     console.error('Failed to save personal information:', error)
-    alert('Fehler beim Speichern der Informationen. Bitte versuchen Sie es erneut.')
+    alert(t('registration.errors.saveError'))
   } finally {
     isLoading.value = false
   }
@@ -213,7 +216,7 @@ const handleSave = async () => {
 
 const handleDiscard = () => {
   // Confirm before discarding
-  if (confirm('Möchten Sie wirklich alle Änderungen verwerfen?')) {
+  if (confirm(t('personalInfo.discardConfirm'))) {
     router.push('/')
   }
 }
