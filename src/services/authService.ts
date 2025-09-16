@@ -58,19 +58,19 @@ export const authService = {
   ): Promise<RegisterResponse> {
     try {
       console.log('Attempting to register with:', { email, firstName, lastName });
-      
+
       const response = await axios.post(`${API_BASE_URL}/auth/register`, {
         email,
         password,
         firstName,
         lastName
       });
-      
+
       console.log('Registration successful:', response.data);
       return response.data;
     } catch (error) {
       console.error('Registration error details:', error);
-      
+
       // Check if it's a network error
       if (axios.isAxiosError(error)) {
         if (error.code === 'ECONNREFUSED') {
@@ -87,7 +87,7 @@ export const authService = {
           throw new Error('No response from server. Check backend URL and network connection.');
         }
       }
-      
+
       throw error;
     }
   },
@@ -95,26 +95,26 @@ export const authService = {
   async login(email: string, password: string): Promise<LoginResponse> {
     try {
       console.log('Attempting to login with:', { email });
-      
+
       // Match your backend's expected format
       const requestData = {
         Email: email,
         Password: password
       };
-      
+
       console.log('Sending login request data:', requestData);
-      
+
       const response = await axios.post(`${API_BASE_URL}/auth/login`, requestData, {
         headers: {
           'Content-Type': 'application/json',
         }
       });
-      
+
       console.log('Login successful:', response.data);
       return response.data;
     } catch (error) {
       console.error('Login error:', error);
-      
+
       if (axios.isAxiosError(error)) {
         if (error.code === 'ECONNREFUSED') {
           throw new Error('Cannot connect to server. Is the backend running?');
@@ -125,7 +125,7 @@ export const authService = {
           throw new Error('No response from server. Check backend URL and network connection.');
         }
       }
-      
+
       throw error;
     }
   },

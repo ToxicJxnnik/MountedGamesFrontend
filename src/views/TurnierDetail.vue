@@ -2,153 +2,200 @@
   <div class="tournament-container">
     <h1>Landesturnier OÖ</h1>
 
-    <!-- Qualifikationsrunde 1 -->
+    <!-- Runde 1 -->
     <div class="round">
-      <h2>Qualifikationsrunde 1</h2>
+      <div class="round-header" @click="toggle(1)">
+        <h2>Qualifikationsrunde 1</h2>
+        <span>{{ openRound === 1 ? '▲' : '▼' }}</span>
+      </div>
+      <div v-if="openRound === 1" class="round-body">
+        <p>Keine Heats vorhanden</p>
+      </div>
     </div>
 
-    <!-- Qualifikationsrunde 2 -->
+    <!-- Runde 2 -->
     <div class="round">
-      <h2>Qualifikationsrunde 2 - In Gang</h2>
-
-      <div class="heats">
-        <div class="heat" v-for="heat in heats" :key="heat.id">
-          <h3>Heat {{ heat.id }} <span v-if="heat.status">({{ heat.status }})</span></h3>
-
-          <div class="participant" v-for="p in heat.participants" :key="p.name">
-            <span class="pos">{{ p.position }}</span>
-            <span class="name">{{ p.name }}</span>
-            <span class="team">{{ p.team }}</span>
-            <span class="points">{{ p.points ? p.points + ' Punkte' : '-' }}</span>
+      <div class="round-header" @click="toggle(2)">
+        <h2>Qualifikationsrunde 2 - In Gang</h2>
+        <span>{{ openRound === 2 ? '▲' : '▼' }}</span>
+      </div>
+      <div v-if="openRound === 2" class="round-body">
+        <div class="heats">
+          <div v-for="heat in heatsRound2" :key="heat.id" class="heat">
+            <h3>
+              Heat {{ heat.id }}
+              <span
+                class="status"
+                :class="{
+                  done: heat.status === 'Abgeschlossen',
+                  live: heat.status === 'Live',
+                  upcoming: heat.status === 'Anstehend'
+                }"
+              >
+                ({{ heat.status }})
+              </span>
+            </h3>
+            <ul>
+              <li v-for="p in heat.participants" :key="p.pos">
+                <span class="pos">{{ p.pos }}.</span>
+                <span class="name">{{ p.name }}</span>
+                <span class="points" v-if="p.points">{{ p.points }} Punkte</span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Qualifikationsrunde 3 -->
+    <!-- Runde 3 -->
     <div class="round">
-      <h2>Qualifikationsrunde 3</h2>
+      <div class="round-header" @click="toggle(3)">
+        <h2>Qualifikationsrunde 3</h2>
+        <span>{{ openRound === 3 ? '▲' : '▼' }}</span>
+      </div>
+      <div v-if="openRound === 3" class="round-body">
+        <p>Keine Heats vorhanden</p>
+      </div>
     </div>
 
     <!-- Finale -->
     <div class="round">
-      <h2>Finale</h2>
+      <div class="round-header" @click="toggle(4)">
+        <h2>Finale</h2>
+        <span>{{ openRound === 4 ? '▲' : '▼' }}</span>
+      </div>
+      <div v-if="openRound === 4" class="round-body">
+        <p>Keine Heats vorhanden</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-interface Participant {
-  position: number
-  name: string
-  team: string
-  points?: number
+import { ref } from 'vue'
+
+const openRound = ref<number | null>(null)
+
+function toggle(round: number) {
+  openRound.value = openRound.value === round ? null : round
 }
 
-interface Heat {
-  id: number
-  status?: string
-  participants: Participant[]
-}
-
-// Hardcoded data basierend auf Screenshot
-const heats: Heat[] = [
+const heatsRound2 = [
   {
     id: 7,
-    status: "Abgeschlossen",
+    status: 'Abgeschlossen',
     participants: [
-      { position: 1, name: "Lisa Schmidt", team: "FV München", points: 87 },
-      { position: 2, name: "Tom Weber", team: "RC Stuttgart", points: 92 },
-      { position: 3, name: "Emma Fischer", team: "Ponyhof Dresden", points: 95 },
-      { position: 4, name: "Paul Müller", team: "RV Hannover", points: 89 },
-      { position: 5, name: "Nina Bauer", team: "RC Berlin", points: 91 },
-      { position: 6, name: "Max Koch", team: "Team Austria", points: 88 }
+      { pos: 1, name: 'Lisa Schmidt', points: 87 },
+      { pos: 2, name: 'Tom Weber', points: 92 },
+      { pos: 3, name: 'Emma Fischer', points: 95 }
     ]
   },
   {
     id: 8,
-    status: "LIVE",
+    status: 'Live',
     participants: [
-      { position: 1, name: "Sarah Müller", team: "RC Berlin" },
-      { position: 2, name: "Jonas Wagner", team: "FV Dresden" },
-      { position: 3, name: "Lena Hoffmann", team: "Team Schweiz" },
-      { position: 4, name: "Felix Braun", team: "RC Frankfurt" },
-      { position: 5, name: "Julia Klein", team: "RC Hannover" },
-      { position: 6, name: "Robert Jung", team: "FV Leipzig" }
-    ]
-  },
-  {
-    id: 9,
-    status: "Anstehend",
-    participants: [
-      { position: 1, name: "Anna Schmidt", team: "FV Aachen" },
-      { position: 2, name: "David Mayer", team: "RC Hamburg" },
-      { position: 3, name: "Sophie Wolf", team: "RV Leipzig" },
-      { position: 4, name: "Michael Lang", team: "FV Berlin" },
-      { position: 5, name: "Petra Richter", team: "RC Hamburg" },
-      { position: 6, name: "Stefan Huber", team: "Ponyhof Dresden" }
+      { pos: 1, name: 'Sarah Müller' },
+      { pos: 2, name: 'Jonas Wagner' }
     ]
   }
 ]
 </script>
 
 <style scoped>
+/* Weißer Hintergrund */
 .tournament-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 2rem auto;
   font-family: Arial, sans-serif;
+  background: #fff;
+  color: #000;
 }
 
+/* Runde-Karten */
 .round {
-  margin-bottom: 2rem;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background: #f5f5f5;
 }
 
+/* Header */
+.round-header {
+  display: flex;
+  justify-content: space-between;
+  background: #eaeaea;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  color: #000;
+}
+
+/* Body */
+.round-body {
+  padding: 1rem;
+  background: #fff;
+  color: #000;
+}
+
+/* Heats */
 .heats {
   display: flex;
-  gap: 1rem;
   flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .heat {
   flex: 1;
   min-width: 250px;
-  background: #e8f5e9;
-  border-radius: 8px;
-  padding: 0.5rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: #000;
 }
 
 .heat h3 {
-  font-size: 1rem;
   margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #000;
 }
 
-.participant {
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin: 0.25rem 0;
   display: flex;
   justify-content: space-between;
-  margin: 0.25rem 0;
   font-size: 0.9rem;
+  color: #111;
 }
 
 .pos {
   font-weight: bold;
+  margin-right: 0.5rem;
 }
 
 .name {
   flex: 1;
-  margin-left: 0.5rem;
-}
-
-.team {
-  margin-left: 0.5rem;
-  font-style: italic;
-  color: #555;
 }
 
 .points {
-  margin-left: 0.5rem;
   font-weight: bold;
+  color: #444;
+}
+
+/* Status Farben */
+.status.done {
+  color: green;
+}
+.status.live {
+  color: orange;
+}
+.status.upcoming {
+  color: blue;
 }
 </style>

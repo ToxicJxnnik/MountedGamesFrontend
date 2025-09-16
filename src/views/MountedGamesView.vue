@@ -12,9 +12,9 @@
             <table class="tournament-table">
               <thead>
                 <tr>
-                  <th>Turnier</th>
-                  <th>Datum</th>
-                  <th>Platz</th>
+                  <th>Tournament</th>
+                  <th>Date</th>
+                  <th>Location</th>
                   <th>Regelplatz</th>
                   <th>Details</th>
                 </tr>
@@ -24,12 +24,8 @@
                 <td>{{ round.name }}</td>
                 <td>{{ round.time }}</td>
                 <td>{{ round.place }}</td>
-                <td><router-link to="/tournament-details" class="login-link-text">
-            Details
-          </router-link></td>
-                <td><router-link to="/tournament-details" class="login-link-text">
-            Details
-          </router-link></td>
+                <td><router-link to="/tournament-details" class="login-link-text">details</router-link></td>
+                <td><router-link to="/tournament-details" class="login-link-text">details</router-link></td>
               </tr>
               <tr class="highlight">
                 <td colspan="2">Heat 1<br>Heat 2<br>Heat 3</td>
@@ -40,8 +36,8 @@
                   <td>{{ round.name }}</td>
                   <td>{{ round.time }}</td>
                   <td>{{ round.place }}</td>
-                  <td>Details</td>
-                  <td>📧</td>
+                  <td><router-link to="/tournament-details" class="login-link-text">details</router-link></td>
+                  <td><router-link to="/tournament-details" class="login-link-text">details</router-link></td>
                 </tr>
                 <tr class="highlight">
                   <td colspan="2">Heat 1<br />Heat 2<br />Heat 3</td>
@@ -56,7 +52,7 @@
 
       <!-- Upcoming Tournaments Section -->
       <section class="upcoming-tournaments">
-        <h2>Bevorstehende Turniere:</h2>
+        <h2>Next Tournament:</h2>
         <div class="tournament-cards">
           <div
             v-for="tournament in upcomingTournaments"
