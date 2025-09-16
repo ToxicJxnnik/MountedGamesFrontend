@@ -5,18 +5,18 @@
     <main class="main-content">
       <!-- Current Tournament Section -->
       <section class="current-tournament">
-        <h2>Aktuelles Turnier:</h2>
+        <h2>{{ $t('tournament.currentTournament') }}</h2>
         <div class="tournament-card">
           <h3>{{ currentTournament.name }}</h3>
           <div class="tournament-details">
             <table class="tournament-table">
               <thead>
                 <tr>
-                  <th>Turnier</th>
-                  <th>Datum</th>
-                  <th>Platz</th>
-                  <th>Regelplatz</th>
-                  <th>Details</th>
+                  <th>{{ $t('tournament.tournament') }}</th>
+                  <th>{{ $t('tournament.date') }}</th>
+                  <th>{{ $t('tournament.place') }}</th>
+                  <th>{{ $t('tournament.regularPlace') }}</th>
+                  <th>{{ $t('tournament.details') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -26,12 +26,12 @@
                   <td>{{ round.place }}</td>
                   <td>
                     <router-link to="/tournament-details" class="tournament-details-text">
-                      Details
+                      {{ $t('tournament.details') }}
                     </router-link>
                   </td>
                   <td>
                     <router-link to="/tournament-details" class="tournament-details-text">
-                      Details
+                      {{ $t('tournament.details') }}
                     </router-link>
                   </td>
                 </tr>
@@ -44,7 +44,7 @@
                   <td>{{ round.name }}</td>
                   <td>{{ round.time }}</td>
                   <td>{{ round.place }}</td>
-                  <td>Details</td>
+                  <td>{{ $t('tournament.details') }}</td>
                   <td>📧</td>
                 </tr>
                 <tr class="highlight">
@@ -60,7 +60,7 @@
 
       <!-- Upcoming Tournaments Section -->
       <section class="upcoming-tournaments">
-        <h2>Bevorstehende Turniere:</h2>
+        <h2>{{ $t('tournament.upcomingTournaments') }}</h2>
         <div class="tournament-cards">
           <div
             v-for="tournament in upcomingTournaments"
@@ -70,20 +70,22 @@
             <h3>{{ tournament.name }}</h3>
             <p>{{ tournament.date }}<br />{{ tournament.location }}</p>
             <p v-if="tournament.registrationDeadline">
-              Anmelden bis: {{ tournament.registrationDeadline }}
+              {{ $t('tournament.registerUntil') }} {{ tournament.registrationDeadline }}
             </p>
             <p v-if="tournament.registrationStart">
-              Anmelden ab: {{ tournament.registrationStart }}
+              {{ $t('tournament.registerFrom') }} {{ tournament.registrationStart }}
             </p>
             <button
               v-if="tournament.canRegister"
               @click="handleRegister(tournament)"
               class="register-btn"
             >
-              <router-link to="/tournament-login" class="login-link-text"> Anmelden </router-link>
+              <router-link to="/tournament-login" class="login-link-text">{{
+                $t('tournament.register')
+              }}</router-link>
             </button>
             <button v-else class="register-btn" disabled>
-              Anmelden ab {{ tournament.registrationStart }}
+              {{ $t('tournament.registerFromDate', { date: tournament.registrationStart }) }}
             </button>
           </div>
         </div>
@@ -91,14 +93,14 @@
 
       <!-- Past Tournaments Section -->
       <section class="past-tournaments">
-        <h2>Vergangene Turniere:</h2>
+        <h2>{{ $t('tournament.pastTournaments') }}</h2>
         <table class="past-tournaments-table">
           <thead>
             <tr>
-              <th>Turnier</th>
-              <th>Datum</th>
-              <th>Pferd</th>
-              <th>Platzierung</th>
+              <th>{{ $t('tournament.tournament') }}</th>
+              <th>{{ $t('tournament.date') }}</th>
+              <th>{{ $t('tournament.horse') }}</th>
+              <th>{{ $t('tournament.placement') }}</th>
             </tr>
           </thead>
           <tbody>

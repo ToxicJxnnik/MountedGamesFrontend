@@ -11,7 +11,7 @@ import App from './App.vue'
 import router from './router'
 
 const i18n = createI18n({
-  locale: 'en', // default locale
+  locale: localStorage.getItem('user-language') || 'de', // default to German, but load saved preference
   fallbackLocale: 'en',
   messages: {
     en,

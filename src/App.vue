@@ -7,29 +7,39 @@
         <div class="system-info">
           <span class="server-status" :class="{ online: systemStatus.serverStatus === 'Online' }">
             <span class="status-dot"></span>
-            Server: {{ systemStatus.serverStatus }}
+            {{ $t('app.serverStatus', { status: systemStatus.serverStatus }) }}
           </span>
-          <span class="last-update"> Letzte Aktualisierung: {{ systemStatus.lastUpdate }} </span>
-          <span class="active-users"> Aktive Benutzer: {{ systemStatus.activeUsers }} </span>
+          <span class="last-update">{{
+            $t('app.lastUpdate', { time: systemStatus.lastUpdate })
+          }}</span>
+          <span class="active-users">{{
+            $t('app.activeUsers', { count: systemStatus.activeUsers })
+          }}</span>
         </div>
       </div>
 
       <div class="status-center">
         <nav class="main-navigation">
-          <RouterLink to="/" class="nav-link">Mounted Games</RouterLink>
+          <RouterLink to="/" class="nav-link">{{ $t('app.mountedGames') }}</RouterLink>
         </nav>
       </div>
 
       <div class="status-right">
+        <!-- Language Switcher -->
+        <LanguageSwitcher />
+
         <!-- Show user info when logged in -->
         <div v-if="authStore.isAuthenticated && authStore.user" class="user-info">
           <div class="user-menu" @click="toggleDropdown" ref="userMenuTrigger">
             <div class="user-avatar">
               {{ userInitials }}
             </div>
-            <span class="welcome-text"
-              >Willkommen, {{ authStore.user.firstName }} {{ authStore.user.lastName }}</span
-            >
+            <span class="welcome-text">{{
+              $t('app.welcome', {
+                firstName: authStore.user.firstName,
+                lastName: authStore.user.lastName,
+              })
+            }}</span>
             <svg
               class="dropdown-icon"
               :class="{ rotated: showDropdown }"
@@ -62,7 +72,7 @@
                   d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
                 />
               </svg>
-              Profil
+              {{ $t('app.profile') }}
             </router-link>
             <router-link to="/settings" class="dropdown-item" @click="closeDropdown">
               <svg width="16" height="16" viewBox="0 0 24 24" class="dropdown-item-icon">
@@ -71,7 +81,7 @@
                   d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97c0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1c0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z"
                 />
               </svg>
-              Einstellungen
+              {{ $t('app.settings') }}
             </router-link>
             <hr class="dropdown-divider" />
             <button @click="handleLogout" class="dropdown-item logout-item">
@@ -81,14 +91,14 @@
                   d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"
                 />
               </svg>
-              Abmelden
+              {{ $t('app.logout') }}
             </button>
           </div>
         </div>
 
         <!-- Show login button when not logged in -->
         <div v-else class="login-info">
-          <button @click="handleLogin" class="login-btn">Anmelden</button>
+          <button @click="handleLogin" class="login-btn">{{ $t('app.login') }}</button>
         </div>
       </div>
     </header>
@@ -104,6 +114,7 @@
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -295,6 +306,7 @@ onUnmounted(() => {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 1rem;
   position: relative;
 }
 

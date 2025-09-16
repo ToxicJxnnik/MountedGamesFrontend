@@ -1,12 +1,12 @@
 <template>
   <div class="register-container">
     <div class="register-card">
-      <h2 class="register-title">Registrieren</h2>
+      <h2 class="register-title">{{ $t('auth.registerTitle') }}</h2>
 
       <form @submit.prevent="handleRegister" class="register-form">
         <div class="form-row">
           <div class="form-group">
-            <label for="firstName" class="form-label">Vorname</label>
+            <label for="firstName" class="form-label">{{ $t('auth.firstName') }}</label>
             <input
               id="firstName"
               v-model="registerForm.firstName"
@@ -18,7 +18,7 @@
           </div>
 
           <div class="form-group">
-            <label for="lastName" class="form-label">Nachname</label>
+            <label for="lastName" class="form-label">{{ $t('auth.lastName') }}</label>
             <input
               id="lastName"
               v-model="registerForm.lastName"
@@ -31,7 +31,7 @@
         </div>
 
         <div class="form-group">
-          <label for="email" class="form-label">Email</label>
+          <label for="email" class="form-label">{{ $t('auth.email') }}</label>
           <input
             id="email"
             v-model="registerForm.email"
@@ -43,7 +43,7 @@
         </div>
 
         <div class="form-group">
-          <label for="password" class="form-label">Passwort</label>
+          <label for="password" class="form-label">{{ $t('auth.password') }}</label>
           <input
             id="password"
             v-model="registerForm.password"
@@ -55,7 +55,7 @@
         </div>
 
         <div class="form-group">
-          <label for="confirmPassword" class="form-label">Passwort bestätigen</label>
+          <label for="confirmPassword" class="form-label">{{ $t('auth.confirmPassword') }}</label>
           <input
             id="confirmPassword"
             v-model="registerForm.confirmPassword"
@@ -78,15 +78,7 @@
               required
             />
             <span class="checkbox-text">
-              Ich stimme den
-              <a href="#" @click.prevent="handleTermsClick" class="terms-link">
-                Nutzungsbedingungen
-              </a>
-              und der
-              <a href="#" @click.prevent="handlePrivacyClick" class="terms-link">
-                Datenschutzerklärung
-              </a>
-              zu
+              {{ $t('auth.acceptTerms') }}
             </span>
           </label>
         </div>
@@ -96,7 +88,7 @@
         </div>
 
         <button type="submit" class="register-btn" :disabled="authStore.isLoading || !isFormValid">
-          {{ authStore.isLoading ? 'Registriere...' : 'Registrieren' }}
+          {{ authStore.isLoading ? $t('auth.registering') : $t('auth.register') }}
         </button>
       </form>
 
@@ -123,13 +115,13 @@
             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
           />
         </svg>
-        Mit Google registrieren
+        {{ $t('auth.registerWithGoogle') }}
       </button>
 
       <div class="login-link">
         <p>
-          Bereits ein Konto?
-          <router-link to="/login" class="login-link-text"> Jetzt anmelden </router-link>
+          {{ $t('auth.haveAccount') }}
+          <router-link to="/login" class="login-link-text">{{ $t('auth.loginNow') }}</router-link>
         </p>
       </div>
     </div>
@@ -140,9 +132,11 @@
 import { reactive, computed } from 'vue' // removed 'ref' import
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
+import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const { t } = useI18n()
 
 // Form data
 const registerForm = reactive({
@@ -157,7 +151,7 @@ const registerForm = reactive({
 // Computed properties
 const passwordError = computed(() => {
   if (registerForm.confirmPassword && registerForm.password !== registerForm.confirmPassword) {
-    return 'Passwörter stimmen nicht überein'
+    return t('auth.passwordMismatch')
   }
   return ''
 })
@@ -203,16 +197,6 @@ const handleGoogleSignUp = () => {
   // Implement Google OAuth registration logic
   // After successful Google registration, also redirect to personal info
   router.push('/personal-info')
-}
-
-const handleTermsClick = () => {
-  console.log('Terms and conditions clicked')
-  // Open terms modal or navigate to terms page
-}
-
-const handlePrivacyClick = () => {
-  console.log('Privacy policy clicked')
-  // Open privacy modal or navigate to privacy page
 }
 </script>
 
