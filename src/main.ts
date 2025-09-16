@@ -2,6 +2,7 @@ import './assets/styles/main.css'
 
 import en from './locales/en.json'
 import de from './locales/de.json'
+import es from './locales/es.json'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
@@ -16,6 +17,7 @@ const i18n = createI18n({
   messages: {
     en,
     de,
+    es,
   },
 })
 
