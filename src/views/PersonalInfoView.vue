@@ -198,9 +198,6 @@ const handleSave = async () => {
       },
     })
 
-    // Show success message or redirect
-    alert('Persönliche Informationen erfolgreich gespeichert!')
-
     // Redirect to the main mounted games view
     router.push('/')
   } catch (error) {

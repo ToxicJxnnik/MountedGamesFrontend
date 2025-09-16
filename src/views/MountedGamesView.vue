@@ -20,22 +20,26 @@
                 </tr>
               </thead>
               <tbody>
-              <tr v-for="round in currentTournament.rounds" :key="round.name">
-                <td>{{ round.name }}</td>
-                <td>{{ round.time }}</td>
-                <td>{{ round.place }}</td>
-                <td><router-link to="/tournament-details" class="login-link-text">
-            Details
-          </router-link></td>
-                <td><router-link to="/tournament-details" class="login-link-text">
-            Details
-          </router-link></td>
-              </tr>
-              <tr class="highlight">
-                <td colspan="2">Heat 1<br>Heat 2<br>Heat 3</td>
-                <td>30:10<br>30:30<br>10:00</td>
-                <td colspan="2"></td>
-              </tr>
+                <tr v-for="round in currentTournament.rounds" :key="round.name">
+                  <td>{{ round.name }}</td>
+                  <td>{{ round.time }}</td>
+                  <td>{{ round.place }}</td>
+                  <td>
+                    <router-link to="/tournament-details" class="tournament-details-text">
+                      Details
+                    </router-link>
+                  </td>
+                  <td>
+                    <router-link to="/tournament-details" class="tournament-details-text">
+                      Details
+                    </router-link>
+                  </td>
+                </tr>
+                <tr class="highlight">
+                  <td colspan="2">Heat 1<br />Heat 2<br />Heat 3</td>
+                  <td>30:10<br />30:30<br />10:00</td>
+                  <td colspan="2"></td>
+                </tr>
                 <tr v-for="round in currentTournament.rounds" :key="round.name">
                   <td>{{ round.name }}</td>
                   <td>{{ round.time }}</td>
@@ -435,21 +439,22 @@ th {
 }
 
 @media (max-width: 768px) {
-.login-link-text {
-  color: #0077ff;        /* default link color */
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.2s ease;
-}
+  .login-link-text {
+    color: #0077ff; /* default link color */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
 
-.login-link-text:hover {
-  color: #0080ff;        /* hover color */
-  text-decoration: underline;
-}
+  .login-link-text:hover {
+    color: #0080ff; /* hover color */
+    text-decoration: underline;
+  }
 
-.login-link-text:visited {
-  color: #0056b3;        /* override browser green visited color */
-}
+  .login-link-text:visited {
+    color: #0056b3; /* override browser green visited color */
+  }
+
   .header-content {
     flex-direction: column;
     gap: 1rem;
@@ -469,11 +474,10 @@ th {
     font-size: 0.9rem;
   }
 }
-  .tournament-table th,
-  .tournament-table td,
-  .past-tournaments-table th,
-  .past-tournaments-table td {
-    padding: 0.5rem;
-  }
-
+.tournament-table th,
+.tournament-table td,
+.past-tournaments-table th,
+.past-tournaments-table td {
+  padding: 0.5rem;
+}
 </style>

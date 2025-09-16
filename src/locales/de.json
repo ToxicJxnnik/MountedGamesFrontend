@@ -1,0 +1,12 @@
+{
+  "welcome": "Seas",
+  "hello": "Seas {name}!",
+  "nav": {
+    "home": "Zuhause",
+    "about": "Über",
+    "contact": "Kontakt"
+  },
+  "messages": {
+    "itemCount": "Keine Elemente | Ein Element | {count} Elemente"
+  }
+}

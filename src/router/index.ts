@@ -24,15 +24,16 @@ const router = createRouter({
       component: () => import('../views/PersonalInfoView.vue'),
     },
     {
-      path: "/tournament-details",
-      name: "tournament-details",
+      path: '/tournament-details',
+      name: 'tournament-details',
       component: () => import('../views/TurnierDetail.vue'),
     },
     {
-      path: "/tournament-login",
-      name: "tournament-login",
+      path: '/tournament-login',
+      name: 'tournament-login',
       component: () => import('../views/LoginInTournament.vue'),
-    }
+    },
+    {
       path: '/tournament-registration',
       name: 'tournament-registration',
       component: () => import('../views/TournamentRegistrationView.vue'),

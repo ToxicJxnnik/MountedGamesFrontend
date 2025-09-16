@@ -1,0 +1,12 @@
+{
+  "welcome": "Welcome",
+  "hello": "Hello {name}!",
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "messages": {
+    "itemCount": "No items | One item | {count} items"
+  }
+}
