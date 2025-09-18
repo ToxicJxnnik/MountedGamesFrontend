@@ -29,6 +29,7 @@
       >
         <span class="language-flag">{{ language.flag }}</span>
         <span class="language-name">{{ language.name }}</span>
+
         <svg
           v-if="locale === language.code"
           class="check-icon"
@@ -58,6 +59,7 @@ const dropdownMenu = ref<HTMLElement>()
 const availableLanguages = [
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'en', name: 'English', flag: '🇺🇸' },
+  { code: 'es', name: 'Spanish', flag: 'es' },
 ]
 
 // Computed properties

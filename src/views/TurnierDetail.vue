@@ -39,7 +39,7 @@
               <li v-for="p in heat.participants" :key="p.pos">
                 <span class="pos">{{ p.pos }}.</span>
                 <span class="name">{{ p.name }}</span>
-                <span class="points" v-if="p.points">{{ p.points }} Punkte</span>
+                <span class="points" v-if="p">{{ p }} Punkte</span>
               </li>
             </ul>
           </div>
