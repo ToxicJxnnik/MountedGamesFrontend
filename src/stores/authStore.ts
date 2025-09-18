@@ -207,6 +207,7 @@ export const useAuthStore = defineStore('auth', () => {
     // Actions
     register,
     login,
+    socialLogin,
     logout,
     getCurrentUser,
     clearError,

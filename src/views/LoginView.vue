@@ -89,7 +89,7 @@ import { useAuth0 } from '@auth0/auth0-vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
-const { loginWithPopup } = useAuth0()
+const auth0 = useAuth0()
 
 // Form data
 const loginForm = reactive({
@@ -130,11 +130,14 @@ const handleLogin = async () => {
 }
 
 const handleSocialsSignIn = async () => {
-  await loginWithPopup({
+  await auth0.loginWithPopup({
     authorizationParams: {
       connection: 'google-oauth2',
     },
   })
+
+  const token = await auth0.getAccessTokenSilently()
+  authStore.socialLogin(token)
 
   router.push('/')
 }

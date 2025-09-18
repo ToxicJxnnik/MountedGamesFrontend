@@ -29,7 +29,7 @@ app.use(router)
 app.use(i18n)
 app.use(
   createAuth0({
-    domain: 'https://dev-226i7o1uuvc0jkwm.eu.auth0.com',
+    domain: 'dev-226i7o1uuvc0jkwm.eu.auth0.com',
     clientId: 'xCA6NheNZdTaLZW8r6Pt8bdDUBfZUFmw',
     authorizationParams: {
       redirect_uri: window.location.origin + '/callback',
