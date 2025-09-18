@@ -59,7 +59,6 @@ const dropdownMenu = ref<HTMLElement>()
 const availableLanguages = [
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Spanish', flag: 'es' },
 ]
 
 // Computed properties
