@@ -43,7 +43,11 @@
         <hr class="divider-line" />
       </div>
 
-      <button @click="handleGoogleSignIn" class="google-signin-btn" :disabled="authStore.isLoading">
+      <button
+        @click="handleSocialsSignIn"
+        class="google-signin-btn"
+        :disabled="authStore.isLoading"
+      >
         <svg class="google-icon" viewBox="0 0 24 24" width="18" height="18">
           <path
             fill="#4285F4"
@@ -81,9 +85,11 @@
 import { reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
+import { useAuth0 } from '@auth0/auth0-vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const { loginWithPopup } = useAuth0()
 
 // Form data
 const loginForm = reactive({
@@ -123,11 +129,14 @@ const handleLogin = async () => {
   }
 }
 
-const handleGoogleSignIn = () => {
-  console.log('Google sign in clicked')
-  // Implement Google OAuth login logic
-  // After successful Google login, redirect to home
-  // router.push('/')
+const handleSocialsSignIn = async () => {
+  await loginWithPopup({
+    authorizationParams: {
+      connection: 'google-oauth2',
+    },
+  })
+
+  router.push('/')
 }
 </script>
 

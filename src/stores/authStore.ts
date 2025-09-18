@@ -98,6 +98,28 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const socialLogin = async (accessToken: string, role?: string) => {
+    try {
+      isLoading.value = true
+      error.value = null
+
+      const response = await authService.socialLogin(accessToken, role)
+
+      user.value = response.user
+      token.value = response.token
+      setCookie('auth_token', response.token)
+      setCookie('user_info', JSON.stringify(response.user))
+
+      return response
+    } catch (err: unknown) {
+      const errorMessage = extractErrorMessage(err, 'Social login failed')
+      error.value = errorMessage
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   const logout = async () => {
     try {
       await authService.logout()
