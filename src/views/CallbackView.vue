@@ -1,13 +1,24 @@
 <template>
   <div class="callback-container">
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>Processing authentication...</p>
-    </div>
+    <Card class="callback-card">
+      <template #content>
+        <div class="loading-content">
+          <ProgressSpinner
+            style="width: 50px; height: 50px"
+            strokeWidth="4"
+            animationDuration="1s"
+          />
+          <p class="loading-text">Processing authentication...</p>
+        </div>
+      </template>
+    </Card>
   </div>
 </template>
 
 <script setup lang="ts">
+import Card from 'primevue/card'
+import ProgressSpinner from 'primevue/progressspinner'
+
 // This component doesn't need any logic for popup auth
 // Auth0 handles the callback automatically
 </script>
@@ -18,28 +29,24 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
-.loading {
-  text-align: center;
+.callback-card {
+  min-width: 300px;
 }
 
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #4a90e2;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 2s linear infinite;
-  margin: 0 auto 1rem;
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.loading-text {
+  color: #2c3e50;
+  font-size: 1rem;
+  margin: 0;
 }
 </style>

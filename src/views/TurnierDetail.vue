@@ -1,201 +1,176 @@
 <template>
   <div class="tournament-container">
-    <h1>Landesturnier OÖ</h1>
+    <Card>
+      <template #title>
+        <h1>Landesturnier OÖ</h1>
+      </template>
+      <template #content>
+        <Accordion v-model:value="activeIndex" multiple>
+          <!-- Runde 1 -->
+          <AccordionPanel value="0">
+            <AccordionHeader>Qualifikationsrunde 1</AccordionHeader>
+            <AccordionContent>
+              <Message severity="info" :closable="false"> Keine Heats vorhanden </Message>
+            </AccordionContent>
+          </AccordionPanel>
 
-    <!-- Runde 1 -->
-    <div class="round">
-      <div class="round-header" @click="toggle(1)">
-        <h2>Qualifikationsrunde 1</h2>
-        <span>{{ openRound === 1 ? '▲' : '▼' }}</span>
-      </div>
-      <div v-if="openRound === 1" class="round-body">
-        <p>Keine Heats vorhanden</p>
-      </div>
-    </div>
+          <!-- Runde 2 -->
+          <AccordionPanel value="1">
+            <AccordionHeader>
+              Qualifikationsrunde 2 - In Gang
+              <Tag value="Live" severity="success" class="ml-2"></Tag>
+            </AccordionHeader>
+            <AccordionContent>
+              <div class="heats-grid">
+                <Card v-for="heat in heatsRound2" :key="heat.id" class="heat-card">
+                  <template #title>
+                    <div class="heat-title">
+                      Heat {{ heat.id }}
+                      <Tag
+                        :value="heat.status"
+                        :severity="getStatusSeverity(heat.status)"
+                        class="ml-2"
+                      ></Tag>
+                    </div>
+                  </template>
+                  <template #content>
+                    <DataTable :value="heat.participants" size="small">
+                      <Column field="pos" header="Pos" style="width: 60px">
+                        <template #body="slotProps"> {{ slotProps.data.pos }}. </template>
+                      </Column>
+                      <Column field="name" header="Name"></Column>
+                      <Column field="points" header="Punkte" style="width: 100px">
+                        <template #body="slotProps">
+                          <span v-if="slotProps.data.points" class="points-badge">
+                            {{ slotProps.data.points }}
+                          </span>
+                        </template>
+                      </Column>
+                    </DataTable>
+                  </template>
+                </Card>
+              </div>
+            </AccordionContent>
+          </AccordionPanel>
 
-    <!-- Runde 2 -->
-    <div class="round">
-      <div class="round-header" @click="toggle(2)">
-        <h2>Qualifikationsrunde 2 - In Gang</h2>
-        <span>{{ openRound === 2 ? '▲' : '▼' }}</span>
-      </div>
-      <div v-if="openRound === 2" class="round-body">
-        <div class="heats">
-          <div v-for="heat in heatsRound2" :key="heat.id" class="heat">
-            <h3>
-              Heat {{ heat.id }}
-              <span
-                class="status"
-                :class="{
-                  done: heat.status === 'Abgeschlossen',
-                  live: heat.status === 'Live',
-                  upcoming: heat.status === 'Anstehend'
-                }"
-              >
-                ({{ heat.status }})
-              </span>
-            </h3>
-            <ul>
-              <li v-for="p in heat.participants" :key="p.pos">
-                <span class="pos">{{ p.pos }}.</span>
-                <span class="name">{{ p.name }}</span>
-                <span class="points" v-if="p">{{ p }} Punkte</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+          <!-- Runde 3 -->
+          <AccordionPanel value="2">
+            <AccordionHeader>Qualifikationsrunde 3</AccordionHeader>
+            <AccordionContent>
+              <Message severity="info" :closable="false"> Keine Heats vorhanden </Message>
+            </AccordionContent>
+          </AccordionPanel>
 
-    <!-- Runde 3 -->
-    <div class="round">
-      <div class="round-header" @click="toggle(3)">
-        <h2>Qualifikationsrunde 3</h2>
-        <span>{{ openRound === 3 ? '▲' : '▼' }}</span>
-      </div>
-      <div v-if="openRound === 3" class="round-body">
-        <p>Keine Heats vorhanden</p>
-      </div>
-    </div>
-
-    <!-- Finale -->
-    <div class="round">
-      <div class="round-header" @click="toggle(4)">
-        <h2>Finale</h2>
-        <span>{{ openRound === 4 ? '▲' : '▼' }}</span>
-      </div>
-      <div v-if="openRound === 4" class="round-body">
-        <p>Keine Heats vorhanden</p>
-      </div>
-    </div>
+          <!-- Finale -->
+          <AccordionPanel value="3">
+            <AccordionHeader>Finale</AccordionHeader>
+            <AccordionContent>
+              <Message severity="info" :closable="false"> Keine Heats vorhanden </Message>
+            </AccordionContent>
+          </AccordionPanel>
+        </Accordion>
+      </template>
+    </Card>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import Card from 'primevue/card'
+import Accordion from 'primevue/accordion'
+import AccordionPanel from 'primevue/accordionpanel'
+import AccordionHeader from 'primevue/accordionheader'
+import AccordionContent from 'primevue/accordioncontent'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import Message from 'primevue/message'
+import Tag from 'primevue/tag'
 
-const openRound = ref<number | null>(null)
+const activeIndex = ref<string[] | undefined>(['1']) // Open round 2 by default
 
-function toggle(round: number) {
-  openRound.value = openRound.value === round ? null : round
+interface Participant {
+  pos: number
+  name: string
+  points?: number
 }
 
-const heatsRound2 = [
+interface Heat {
+  id: number
+  status: string
+  participants: Participant[]
+}
+
+const heatsRound2: Heat[] = [
   {
     id: 7,
     status: 'Abgeschlossen',
     participants: [
       { pos: 1, name: 'Lisa Schmidt', points: 87 },
       { pos: 2, name: 'Tom Weber', points: 92 },
-      { pos: 3, name: 'Emma Fischer', points: 95 }
-    ]
+      { pos: 3, name: 'Emma Fischer', points: 95 },
+    ],
   },
   {
     id: 8,
     status: 'Live',
     participants: [
       { pos: 1, name: 'Sarah Müller' },
-      { pos: 2, name: 'Jonas Wagner' }
-    ]
-  }
+      { pos: 2, name: 'Jonas Wagner' },
+    ],
+  },
 ]
+
+const getStatusSeverity = (status: string): 'success' | 'warn' | 'info' | 'danger' => {
+  switch (status) {
+    case 'Abgeschlossen':
+      return 'success'
+    case 'Live':
+      return 'warn'
+    case 'Anstehend':
+      return 'info'
+    default:
+      return 'info'
+  }
+}
 </script>
 
 <style scoped>
-/* Weißer Hintergrund */
 .tournament-container {
   max-width: 1200px;
   margin: 2rem auto;
+  padding: 0 1rem;
   font-family: Arial, sans-serif;
-  background: #fff;
-  color: #000;
 }
 
-/* Runde-Karten */
-.round {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  background: #f5f5f5;
-}
-
-/* Header */
-.round-header {
+.heat-title {
   display: flex;
-  justify-content: space-between;
-  background: #eaeaea;
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  font-weight: bold;
-  color: #000;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
-/* Body */
-.round-body {
-  padding: 1rem;
-  background: #fff;
-  color: #000;
-}
-
-/* Heats */
-.heats {
-  display: flex;
-  flex-wrap: wrap;
+.heats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1rem;
 }
 
-.heat {
-  flex: 1;
-  min-width: 250px;
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 0.75rem;
-  color: #000;
+.heat-card {
+  height: 100%;
 }
 
-.heat h3 {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  color: #000;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-li {
-  margin: 0.25rem 0;
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-  color: #111;
-}
-
-.pos {
+.points-badge {
   font-weight: bold;
-  margin-right: 0.5rem;
+  color: #4a90e2;
 }
 
-.name {
-  flex: 1;
-}
+@media (max-width: 768px) {
+  .tournament-container {
+    margin: 1rem auto;
+  }
 
-.points {
-  font-weight: bold;
-  color: #444;
-}
-
-/* Status Farben */
-.status.done {
-  color: green;
-}
-.status.live {
-  color: orange;
-}
-.status.upcoming {
-  color: blue;
+  .heats-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

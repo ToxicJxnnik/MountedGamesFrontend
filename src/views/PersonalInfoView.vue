@@ -1,141 +1,128 @@
 <template>
   <div class="personal-info-container">
-    <div class="personal-info-card">
-      <h2 class="form-title">{{ $t('personalInfo.title') }}</h2>
+    <Card class="personal-info-card">
+      <template #title>
+        <h2 class="form-title">{{ $t('personalInfo.title') }}</h2>
+      </template>
+      <template #content>
+        <form @submit.prevent="handleSave" class="personal-info-form">
+          <!-- Personal Information Section -->
+          <div class="form-section">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName" class="form-label">{{ $t('personalInfo.firstName') }}</label>
+                <InputText id="firstName" v-model="personalForm.firstName" fluid />
+              </div>
 
-      <form @submit.prevent="handleSave" class="personal-info-form">
-        <!-- Personal Information Section -->
-        <div class="form-section">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="firstName" class="form-label">{{ $t('personalInfo.firstName') }}</label>
-              <input
-                id="firstName"
-                v-model="personalForm.firstName"
-                type="text"
-                class="form-input"
-                required
-              />
+              <div class="form-group">
+                <label for="lastName" class="form-label">{{ $t('personalInfo.lastName') }}</label>
+                <InputText id="lastName" v-model="personalForm.lastName" fluid />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="birthDate" class="form-label">{{ $t('personalInfo.birthDate') }}</label>
+                <DatePicker
+                  id="birthDate"
+                  v-model="personalForm.birthDate"
+                  dateFormat="yy-mm-dd"
+                  showIcon
+                  fluid
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="nationality" class="form-label">{{
+                  $t('personalInfo.nationality')
+                }}</label>
+                <Select
+                  id="nationality"
+                  v-model="personalForm.nationality"
+                  :options="nationalityOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  :placeholder="$t('personalInfo.pleaseSelect')"
+                  fluid
+                />
+              </div>
             </div>
 
             <div class="form-group">
-              <label for="lastName" class="form-label">{{ $t('personalInfo.lastName') }}</label>
-              <input
-                id="lastName"
-                v-model="personalForm.lastName"
-                type="text"
-                class="form-input"
-                required
+              <label for="phone" class="form-label">{{ $t('personalInfo.phone') }}</label>
+              <InputText
+                id="phone"
+                v-model="personalForm.phone"
+                :placeholder="$t('personalInfo.phonePlaceholder')"
+                fluid
               />
             </div>
           </div>
 
-          <div class="form-row">
+          <!-- Club and Membership Information Section -->
+          <Divider />
+
+          <div class="form-section">
+            <h3 class="section-title">{{ $t('personalInfo.clubAndMembership') }}</h3>
+
             <div class="form-group">
-              <label for="birthDate" class="form-label">{{ $t('personalInfo.birthDate') }}</label>
-              <input
-                id="birthDate"
-                v-model="personalForm.birthDate"
-                type="date"
-                class="form-input"
-                required
+              <label for="club" class="form-label">{{ $t('personalInfo.club') }}</label>
+              <InputText
+                id="club"
+                v-model="personalForm.club"
+                :placeholder="$t('personalInfo.clubPlaceholder')"
+                fluid
               />
+              <small class="form-note">{{ $t('personalInfo.clubNote') }}</small>
             </div>
 
             <div class="form-group">
-              <label for="nationality" class="form-label">{{
-                $t('personalInfo.nationality')
+              <label for="membershipNumber" class="form-label">{{
+                $t('personalInfo.membershipNumber')
               }}</label>
-              <select
-                id="nationality"
-                v-model="personalForm.nationality"
-                class="form-select"
-                required
-              >
-                <option value="">{{ $t('personalInfo.pleaseSelect') }}</option>
-                <option value="DE">{{ $t('personalInfo.countries.DE') }}</option>
-                <option value="AT">{{ $t('personalInfo.countries.AT') }}</option>
-                <option value="CH">{{ $t('personalInfo.countries.CH') }}</option>
-                <option value="FR">{{ $t('personalInfo.countries.FR') }}</option>
-                <option value="IT">{{ $t('personalInfo.countries.IT') }}</option>
-                <option value="NL">{{ $t('personalInfo.countries.NL') }}</option>
-                <option value="BE">{{ $t('personalInfo.countries.BE') }}</option>
-                <option value="DK">{{ $t('personalInfo.countries.DK') }}</option>
-                <option value="SE">{{ $t('personalInfo.countries.SE') }}</option>
-                <option value="NO">{{ $t('personalInfo.countries.NO') }}</option>
-                <option value="other">{{ $t('personalInfo.countries.other') }}</option>
-              </select>
+              <InputText
+                id="membershipNumber"
+                v-model="personalForm.membershipNumber"
+                :placeholder="$t('personalInfo.membershipPlaceholder')"
+                fluid
+              />
+              <small class="form-note">{{ $t('personalInfo.membershipNote') }}</small>
+            </div>
+
+            <div class="form-group">
+              <label for="role" class="form-label">{{ $t('personalInfo.role') }}</label>
+              <Select
+                id="role"
+                v-model="personalForm.role"
+                :options="roleOptions"
+                optionLabel="label"
+                optionValue="value"
+                :placeholder="$t('personalInfo.pleaseSelect')"
+                fluid
+              />
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="phone" class="form-label">{{ $t('personalInfo.phone') }}</label>
-            <input
-              id="phone"
-              v-model="personalForm.phone"
-              type="tel"
-              class="form-input"
-              :placeholder="$t('personalInfo.phonePlaceholder')"
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <Button
+              type="button"
+              :label="$t('personalInfo.discard')"
+              severity="secondary"
+              outlined
+              @click="handleDiscard"
+              :disabled="isLoading"
+            />
+            <Button
+              type="submit"
+              :label="isLoading ? $t('personalInfo.saving') : $t('personalInfo.save')"
+              :loading="isLoading"
+              :disabled="!isFormValid"
             />
           </div>
-        </div>
-
-        <!-- Club and Membership Information Section -->
-        <div class="form-section">
-          <h3 class="section-title">{{ $t('personalInfo.clubAndMembership') }}</h3>
-
-          <div class="form-group">
-            <label for="club" class="form-label">{{ $t('personalInfo.club') }}</label>
-            <input
-              id="club"
-              v-model="personalForm.club"
-              type="text"
-              class="form-input"
-              :placeholder="$t('personalInfo.clubPlaceholder')"
-              required
-            />
-            <p class="form-note">{{ $t('personalInfo.clubNote') }}</p>
-          </div>
-
-          <div class="form-group">
-            <label for="membershipNumber" class="form-label">{{
-              $t('personalInfo.membershipNumber')
-            }}</label>
-            <input
-              id="membershipNumber"
-              v-model="personalForm.membershipNumber"
-              type="text"
-              class="form-input"
-              :placeholder="$t('personalInfo.membershipPlaceholder')"
-            />
-            <p class="form-note">{{ $t('personalInfo.membershipNote') }}</p>
-          </div>
-
-          <div class="form-group">
-            <label for="role" class="form-label">{{ $t('personalInfo.role') }}</label>
-            <select id="role" v-model="personalForm.role" class="form-select">
-              <option value="">{{ $t('personalInfo.pleaseSelect') }}</option>
-              <option value="rider">{{ $t('personalInfo.roles.rider') }}</option>
-              <option value="trainer">{{ $t('personalInfo.roles.trainer') }}</option>
-              <option value="official">{{ $t('personalInfo.roles.official') }}</option>
-              <option value="volunteer">{{ $t('personalInfo.roles.volunteer') }}</option>
-              <option value="parent">{{ $t('personalInfo.roles.parent') }}</option>
-              <option value="other">{{ $t('personalInfo.roles.other') }}</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Form Actions -->
-        <div class="form-actions">
-          <button type="button" @click="handleDiscard" class="discard-btn" :disabled="isLoading">
-            {{ $t('personalInfo.discard') }}
-          </button>
-          <button type="submit" class="save-btn" :disabled="isLoading || !isFormValid">
-            {{ isLoading ? $t('personalInfo.saving') : $t('personalInfo.save') }}
-          </button>
-        </div>
-      </form>
-    </div>
+        </form>
+      </template>
+    </Card>
   </div>
 </template>
 
@@ -145,15 +132,20 @@ import axios from 'axios'
 import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import Card from 'primevue/card'
+import InputText from 'primevue/inputtext'
+import Select from 'primevue/select'
+import DatePicker from 'primevue/datepicker'
+import Button from 'primevue/button'
+import Divider from 'primevue/divider'
 
 const router = useRouter()
 const { t } = useI18n()
 
-// Form data
 const personalForm = reactive({
   firstName: '',
   lastName: '',
-  birthDate: '',
+  birthDate: null as Date | null,
   nationality: '',
   phone: '',
   club: '',
@@ -163,7 +155,29 @@ const personalForm = reactive({
 
 const isLoading = ref(false)
 
-// Computed properties
+const nationalityOptions = [
+  { label: t('personalInfo.countries.DE'), value: 'DE' },
+  { label: t('personalInfo.countries.AT'), value: 'AT' },
+  { label: t('personalInfo.countries.CH'), value: 'CH' },
+  { label: t('personalInfo.countries.FR'), value: 'FR' },
+  { label: t('personalInfo.countries.IT'), value: 'IT' },
+  { label: t('personalInfo.countries.NL'), value: 'NL' },
+  { label: t('personalInfo.countries.BE'), value: 'BE' },
+  { label: t('personalInfo.countries.DK'), value: 'DK' },
+  { label: t('personalInfo.countries.SE'), value: 'SE' },
+  { label: t('personalInfo.countries.NO'), value: 'NO' },
+  { label: t('personalInfo.countries.other'), value: 'other' },
+]
+
+const roleOptions = [
+  { label: t('personalInfo.roles.rider'), value: 'rider' },
+  { label: t('personalInfo.roles.trainer'), value: 'trainer' },
+  { label: t('personalInfo.roles.official'), value: 'official' },
+  { label: t('personalInfo.roles.volunteer'), value: 'volunteer' },
+  { label: t('personalInfo.roles.parent'), value: 'parent' },
+  { label: t('personalInfo.roles.other'), value: 'other' },
+]
+
 const isFormValid = computed(() => {
   return (
     personalForm.firstName &&
@@ -174,7 +188,6 @@ const isFormValid = computed(() => {
   )
 })
 
-// Methods
 const handleSave = async () => {
   if (!isFormValid.value) {
     return
@@ -183,11 +196,15 @@ const handleSave = async () => {
   isLoading.value = true
 
   try {
-    // Map frontend form data to backend expected format
+    // Format date to YYYY-MM-DD
+    const formattedDate = personalForm.birthDate
+      ? new Date(personalForm.birthDate).toISOString().split('T')[0]
+      : ''
+
     const requestData = {
       FirstName: personalForm.firstName,
       LastName: personalForm.lastName,
-      DateOfBirth: personalForm.birthDate,
+      DateOfBirth: formattedDate,
       Nationality: personalForm.nationality,
       PhoneNumber: personalForm.phone,
       Club: personalForm.club,
@@ -204,7 +221,6 @@ const handleSave = async () => {
       },
     })
 
-    // Redirect to the main mounted games view
     router.push('/')
   } catch (error) {
     console.error('Failed to save personal information:', error)
@@ -215,7 +231,6 @@ const handleSave = async () => {
 }
 
 const handleDiscard = () => {
-  // Confirm before discarding
   if (confirm(t('personalInfo.discardConfirm'))) {
     router.push('/')
   }
@@ -233,13 +248,8 @@ const handleDiscard = () => {
 }
 
 .personal-info-card {
-  background: white;
-  border-radius: 12px;
-  padding: 3rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 700px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .form-title {
@@ -247,7 +257,7 @@ const handleDiscard = () => {
   color: #2c3e50;
   font-size: 1.8rem;
   font-weight: 600;
-  margin-bottom: 2rem;
+  margin: 0;
 }
 
 .personal-info-form {
@@ -257,72 +267,38 @@ const handleDiscard = () => {
 }
 
 .form-section {
-  border-bottom: 1px solid #e1e8ed;
-  padding-bottom: 2rem;
-}
-
-.form-section:last-of-type {
-  border-bottom: none;
-  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .section-title {
   color: #2c3e50;
   font-size: 1.2rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin: 0;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  margin-bottom: 1.5rem;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .form-label {
-  display: block;
   color: #2c3e50;
   font-weight: 500;
-  margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
 
-.form-input,
-.form-select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 2px solid #e1e8ed;
-  border-radius: 6px;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  background-color: #fff;
-  color: #2c3e50;
-}
-
-.form-input:focus,
-.form-select:focus {
-  outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-
-.form-input::placeholder {
-  color: #a0a0a0;
-}
-
-.form-select {
-  cursor: pointer;
-}
-
 .form-note {
-  font-size: 0.8rem;
   color: #6b7280;
-  margin-top: 0.5rem;
   font-style: italic;
 }
 
@@ -330,68 +306,12 @@ const handleDiscard = () => {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid #e1e8ed;
+  padding-top: 1rem;
 }
 
-.discard-btn {
-  background: transparent;
-  color: #6b7280;
-  border: 2px solid #e1e8ed;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.discard-btn:hover:not(:disabled) {
-  background: #f8f9fa;
-  border-color: #d1d5db;
-  color: #4b5563;
-}
-
-.discard-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.save-btn {
-  background: #27ae60;
-  color: white;
-  border: none;
-  padding: 0.75rem 2rem;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 120px;
-}
-
-.save-btn:hover:not(:disabled) {
-  background: #219a52;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-}
-
-.save-btn:disabled {
-  background: #bbb;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-/* Responsive design */
 @media (max-width: 768px) {
   .personal-info-container {
     padding: 1rem;
-  }
-
-  .personal-info-card {
-    padding: 2rem;
   }
 
   .form-title {
@@ -400,23 +320,10 @@ const handleDiscard = () => {
 
   .form-row {
     grid-template-columns: 1fr;
-    gap: 0;
   }
 
   .form-actions {
     flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .discard-btn,
-  .save-btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .personal-info-card {
-    padding: 1.5rem;
   }
 }
 </style>

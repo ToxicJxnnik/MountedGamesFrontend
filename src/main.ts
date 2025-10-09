@@ -7,6 +7,8 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { createI18n } from 'vue-i18n'
 import { createAuth0 } from '@auth0/auth0-vue'
+import PrimeVue from 'primevue/config'
+import Aura from '@primeuix/themes/aura'
 
 import App from './App.vue'
 import router from './router'
@@ -25,6 +27,14 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(i18n)
+app.use(PrimeVue, {
+  theme: {
+    preset: Aura,
+    options: {
+      darkModeSelector: false,
+    },
+  },
+})
 app.use(
   createAuth0({
     domain: 'dev-226i7o1uuvc0jkwm.eu.auth0.com',

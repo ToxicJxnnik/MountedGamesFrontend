@@ -1,132 +1,142 @@
 <template>
   <div class="login-container">
-    <div class="login-card">
-      <h2 class="login-title">{{ $t('auth.loginTitle') }}</h2>
+    <Card class="login-card">
+      <template #title>
+        <h2 class="login-title">{{ $t('auth.loginTitle') }}</h2>
+      </template>
+      <template #content>
+        <form @submit.prevent="handleLogin" class="login-form">
+          <div class="form-group">
+            <label for="email" class="form-label">{{ $t('auth.email') }}</label>
+            <InputText
+              id="email"
+              v-model="loginForm.email"
+              type="email"
+              placeholder="max.mustermann@email.com"
+              :disabled="authStore.isLoading"
+              fluid
+            />
+          </div>
 
-      <form @submit.prevent="handleLogin" class="login-form">
-        <div class="form-group">
-          <label for="email" class="form-label">{{ $t('auth.email') }}</label>
-          <input
-            id="email"
-            v-model="loginForm.email"
-            type="email"
-            class="form-input"
-            placeholder="max.mustermann@email.com"
-            required
-            :disabled="authStore.isLoading"
+          <div class="form-group">
+            <label for="password" class="form-label">{{ $t('auth.password') }}</label>
+            <Password
+              id="password"
+              v-model="loginForm.password"
+              placeholder=""
+              :disabled="authStore.isLoading"
+              :feedback="false"
+              toggleMask
+              fluid
+            />
+          </div>
+
+          <Message v-if="authStore.error" severity="error" :closable="false">
+            {{ authStore.error }}
+          </Message>
+
+          <Button
+            type="submit"
+            :label="authStore.isLoading ? $t('auth.loggingIn') : $t('auth.login')"
+            :loading="authStore.isLoading"
+            :disabled="!isFormValid"
+            class="w-full"
           />
-        </div>
+        </form>
 
-        <div class="form-group">
-          <label for="password" class="form-label">{{ $t('auth.password') }}</label>
-          <input
-            id="password"
-            v-model="loginForm.password"
-            type="password"
-            class="form-input"
-            placeholder=""
-            required
+        <Divider align="center">
+          <span class="divider-text">{{ $t('auth.orContinueWith') }}</span>
+        </Divider>
+
+        <!-- Social Login Buttons -->
+        <div class="social-login-container">
+          <Button
+            @click="handleSocialSignIn('google-oauth2')"
             :disabled="authStore.isLoading"
-          />
+            severity="secondary"
+            outlined
+            class="w-full social-btn"
+          >
+            <svg class="social-icon" viewBox="0 0 24 24" width="18" height="18">
+              <path
+                fill="#4285F4"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              />
+              <path
+                fill="#34A853"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+              />
+              <path
+                fill="#EA4335"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+              />
+            </svg>
+            <span class="ml-2">{{ $t('auth.loginWithGoogle') }}</span>
+          </Button>
+
+          <Button
+            @click="handleSocialSignIn('facebook')"
+            :disabled="authStore.isLoading"
+            severity="secondary"
+            outlined
+            class="w-full social-btn"
+          >
+            <svg class="social-icon" viewBox="0 0 24 24" width="18" height="18">
+              <path
+                fill="#1877F2"
+                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+              />
+            </svg>
+            <span class="ml-2">{{ $t('auth.loginWithFacebook') }}</span>
+          </Button>
+
+          <Button
+            @click="handleSocialSignIn('windowslive')"
+            :disabled="authStore.isLoading"
+            severity="secondary"
+            outlined
+            class="w-full social-btn"
+          >
+            <svg class="social-icon" viewBox="0 0 24 24" width="18" height="18">
+              <path fill="#F25022" d="M11.4 11.4H0V0h11.4v11.4z" />
+              <path fill="#00A4EF" d="M24 11.4H12.6V0H24v11.4z" />
+              <path fill="#7FBA00" d="M11.4 24H0V12.6h11.4V24z" />
+              <path fill="#FFB900" d="M24 24H12.6V12.6H24V24z" />
+            </svg>
+            <span class="ml-2">{{ $t('auth.loginWithMicrosoft') }}</span>
+          </Button>
+
+          <Button
+            @click="handleSocialSignIn('twitter')"
+            :disabled="authStore.isLoading"
+            severity="secondary"
+            outlined
+            class="w-full social-btn"
+          >
+            <svg class="social-icon" viewBox="0 0 24 24" width="18" height="18">
+              <path
+                fill="#000000"
+                d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+              />
+            </svg>
+            <span class="ml-2">{{ $t('auth.loginWithTwitter') }}</span>
+          </Button>
         </div>
 
-        <div v-if="authStore.error" class="error-message global-error">
-          {{ authStore.error }}
+        <div class="register-link">
+          <p>
+            {{ $t('auth.noAccount') }}
+            <router-link to="/register" class="register-link-text">{{
+              $t('auth.registerNow')
+            }}</router-link>
+          </p>
         </div>
-
-        <button type="submit" class="login-btn" :disabled="authStore.isLoading || !isFormValid">
-          {{ authStore.isLoading ? $t('auth.loggingIn') : $t('auth.login') }}
-        </button>
-      </form>
-
-      <div class="divider">
-        <hr class="divider-line" />
-        <span class="divider-text">{{ $t('auth.orContinueWith') }}</span>
-      </div>
-
-      <!-- Social Login Buttons -->
-      <div class="social-login-container">
-        <!-- Google -->
-        <button
-          @click="handleSocialSignIn('google-oauth2')"
-          class="social-btn google-btn"
-          :disabled="authStore.isLoading"
-        >
-          <svg class="social-icon" viewBox="0 0 24 24" width="18" height="18">
-            <path
-              fill="#4285F4"
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-            />
-            <path
-              fill="#EA4335"
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-            />
-          </svg>
-          {{ $t('auth.loginWithGoogle') }}
-        </button>
-
-        <!-- Facebook -->
-        <button
-          @click="handleSocialSignIn('facebook')"
-          class="social-btn facebook-btn"
-          :disabled="authStore.isLoading"
-        >
-          <svg class="social-icon" viewBox="0 0 24 24" width="18" height="18">
-            <path
-              fill="#1877F2"
-              d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
-            />
-          </svg>
-          {{ $t('auth.loginWithFacebook') }}
-        </button>
-
-        <!-- Microsoft -->
-        <button
-          @click="handleSocialSignIn('windowslive')"
-          class="social-btn microsoft-btn"
-          :disabled="authStore.isLoading"
-        >
-          <svg class="social-icon" viewBox="0 0 24 24" width="18" height="18">
-            <path fill="#F25022" d="M11.4 11.4H0V0h11.4v11.4z" />
-            <path fill="#00A4EF" d="M24 11.4H12.6V0H24v11.4z" />
-            <path fill="#7FBA00" d="M11.4 24H0V12.6h11.4V24z" />
-            <path fill="#FFB900" d="M24 24H12.6V12.6H24V24z" />
-          </svg>
-          {{ $t('auth.loginWithMicrosoft') }}
-        </button>
-
-        <!-- Twitter/X -->
-        <button
-          @click="handleSocialSignIn('twitter')"
-          class="social-btn twitter-btn"
-          :disabled="authStore.isLoading"
-        >
-          <svg class="social-icon" viewBox="0 0 24 24" width="18" height="18">
-            <path
-              fill="#000000"
-              d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
-            />
-          </svg>
-          {{ $t('auth.loginWithTwitter') }}
-        </button>
-      </div>
-      <div class="register-link">
-        <p>
-          {{ $t('auth.noAccount') }}
-          <router-link to="/register" class="register-link-text">{{
-            $t('auth.registerNow')
-          }}</router-link>
-        </p>
-      </div>
-    </div>
+      </template>
+    </Card>
   </div>
 </template>
 
@@ -135,46 +145,42 @@ import { reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useAuth0 } from '@auth0/auth0-vue'
+import Card from 'primevue/card'
+import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
+import Button from 'primevue/button'
+import Message from 'primevue/message'
+import Divider from 'primevue/divider'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const auth0 = useAuth0()
 
-// Form data
 const loginForm = reactive({
   email: '',
   password: '',
 })
 
-// Computed properties
 const isFormValid = computed(() => {
   return loginForm.email && loginForm.password
 })
 
-// Clear any previous errors when component mounts
 onMounted(() => {
   authStore.clearError()
 })
 
-// Methods
 const handleLogin = async () => {
   if (!isFormValid.value) {
     return
   }
 
   try {
-    authStore.clearError() // Clear any previous errors
-
+    authStore.clearError()
     await authStore.login(loginForm.email, loginForm.password)
-
     console.log('Login successful')
-
-    // Redirect to home page or dashboard after successful login
     router.push('/')
   } catch (error) {
     console.error('Login failed:', error)
-    // Error is already stored in authStore.error by the store
-    // No need to set it again here
   }
 }
 
@@ -188,7 +194,6 @@ const handleSocialSignIn = async (connection: string) => {
 
     const token = await auth0.getAccessTokenSilently()
     await authStore.socialLogin(token)
-
     router.push('/')
   } catch (error) {
     console.error('Social login failed:', error)
@@ -207,13 +212,8 @@ const handleSocialSignIn = async (connection: string) => {
 }
 
 .login-card {
-  background: white;
-  border-radius: 12px;
-  padding: 3rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .login-title {
@@ -221,193 +221,46 @@ const handleSocialSignIn = async (connection: string) => {
   color: #2c3e50;
   font-size: 1.8rem;
   font-weight: 600;
-  margin-bottom: 2rem;
-}
-
-.login-form {
-  margin-bottom: 1.5rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-label {
-  display: block;
-  color: #2c3e50;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.form-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 2px solid #e1e8ed;
-  border-radius: 6px;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  background-color: #fff;
-  color: #2c3e50;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-
-.form-input:disabled {
-  background-color: #f8f9fa;
-  cursor: not-allowed;
-}
-
-.form-input::placeholder {
-  color: #a0a0a0;
-}
-
-.error-message {
-  color: #e74c3c;
-  font-size: 0.8rem;
-  margin-top: 0.5rem;
-  font-weight: 500;
-}
-
-.global-error {
-  background-color: #fff5f5;
-  border: 1px solid #fed7d7;
-  border-radius: 4px;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.login-btn {
-  width: 100%;
-  background: #4a90e2;
-  color: white;
-  border: none;
-  padding: 0.875rem 1.5rem;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-transform: none;
-}
-
-.login-btn:hover:not(:disabled) {
-  background: #357abd;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
-}
-
-.login-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.divider {
-  margin: 1.5rem 0;
-  position: relative;
-  text-align: center;
-}
-
-.divider-line {
-  border: none;
-  border-top: 1px solid #e1e8ed;
   margin: 0;
 }
 
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
 .divider-text {
-  position: absolute;
-  top: -0.6rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: white;
-  padding: 0 1rem;
   font-size: 0.8rem;
   color: #6b7280;
+  padding: 0 1rem;
 }
 
 .social-login-container {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  margin-top: 1rem;
 }
 
 .social-btn {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  border: 1px solid #e1e8ed;
-}
-
-.social-btn:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.social-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+  justify-content: flex-start;
 }
 
 .social-icon {
   flex-shrink: 0;
-}
-
-.google-btn {
-  background: white;
-  color: #5f6368;
-}
-
-.google-btn:hover:not(:disabled) {
-  background: #f8f9fa;
-  border-color: #dadce0;
-}
-
-.facebook-btn {
-  background: #1877f2;
-  color: white;
-  border-color: #1877f2;
-}
-
-.facebook-btn:hover:not(:disabled) {
-  background: #166fe5;
-  border-color: #166fe5;
-}
-
-.microsoft-btn {
-  background: white;
-  color: #5e5e5e;
-}
-
-.microsoft-btn:hover:not(:disabled) {
-  background: #f8f9fa;
-  border-color: #dadce0;
-}
-
-.twitter-btn {
-  background: white;
-  color: #000000;
-}
-
-.twitter-btn:hover:not(:disabled) {
-  background: #f7f7f7;
-  border-color: #d0d0d0;
 }
 
 .register-link {
@@ -433,27 +286,13 @@ const handleSocialSignIn = async (connection: string) => {
   text-decoration: underline;
 }
 
-/* Responsive design */
 @media (max-width: 600px) {
   .login-container {
     padding: 1rem;
   }
 
-  .login-card {
-    padding: 2rem;
-  }
-
   .login-title {
     font-size: 1.5rem;
-  }
-
-  .social-login-container {
-    gap: 0.5rem;
-  }
-
-  .social-btn {
-    padding: 0.625rem 0.75rem;
-    font-size: 0.85rem;
   }
 }
 </style>
