@@ -43,6 +43,11 @@ const router = createRouter({
       name: 'tournament-registration',
       component: () => import('../views/TournamentRegistrationView.vue'),
     },
+    {
+      path: '/scorer',
+      name: 'scorer',
+      component: () => import('../views/ScorerView.vue'),
+    }
   ],
 })
 
