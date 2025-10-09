@@ -174,5 +174,12 @@
     "language": "Language",
     "german": "Deutsch",
     "english": "English"
+  },
+  "referee": {
+    "livePositioning": "Live Positioning",
+    "selectHeat": "Select Heat",
+    "savePositions": "Save Positions",
+    "dragInstructions": "Drag and drop riders to set their positions. Tap and hold to start dragging on touch devices.",
+    "noParticipants": "No participants in this heat"
   }
 }

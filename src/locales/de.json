@@ -174,5 +174,12 @@
     "language": "Sprache",
     "german": "Deutsch",
     "english": "English"
+  },
+  "referee": {
+    "livePositioning": "Live-Positionierung",
+    "selectHeat": "Heat auswählen",
+    "savePositions": "Positionen speichern",
+    "dragInstructions": "Ziehen Sie die Reiter per Drag & Drop, um ihre Positionen festzulegen. Tippen und halten Sie auf Touch-Geräten.",
+    "noParticipants": "Keine Teilnehmer in diesem Heat"
   }
 }
