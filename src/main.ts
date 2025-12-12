@@ -12,6 +12,7 @@ import Aura from '@primeuix/themes/aura'
 
 import App from './App.vue'
 import router from './router'
+import { VueReCaptcha } from 'vue-recaptcha-v3'
 
 const i18n = createI18n({
   locale: localStorage.getItem('user-language') || 'de', // default to German, but load saved preference
@@ -27,6 +28,7 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(i18n)
+
 app.use(PrimeVue, {
   theme: {
     preset: Aura,
@@ -35,6 +37,7 @@ app.use(PrimeVue, {
     },
   },
 })
+
 app.use(
   createAuth0({
     domain: 'dev-226i7o1uuvc0jkwm.eu.auth0.com',
@@ -44,5 +47,15 @@ app.use(
     },
   }),
 )
+
+app.use(VueReCaptcha, {
+  siteKey: '6LcaMxYsAAAAAJwnopIFFzcLpJQBg37dIA0h_Vxk', // Replace with your real key
+  loaderOptions: {
+    autoHideBadge: false,
+    explicitRenderParameters: {
+      badge: 'bottomright'
+    }
+  }
+})
 
 app.mount('#app')

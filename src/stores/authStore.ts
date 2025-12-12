@@ -20,44 +20,23 @@ export const useAuthStore = defineStore('auth', () => {
   // Getters
   const isAuthenticated = computed(() => !!token.value && !!user.value)
 
-  // Helper function to extract error message from different error types
   const extractErrorMessage = (err: unknown, defaultMessage: string): string => {
-    // Check if it's an object with response.data.message (Axios error)
-    if (
-      err &&
-      typeof err === 'object' &&
-      'response' in err &&
-      err.response &&
-      typeof err.response === 'object' &&
-      'data' in err.response &&
-      err.response.data &&
-      typeof err.response.data === 'object' &&
-      'message' in err.response.data &&
-      typeof err.response.data.message === 'string'
-    ) {
-      return err.response.data.message
-    }
-
-    // Check if it's a regular Error object
     if (err instanceof Error) {
       return err.message
     }
-
-    // Check if it's a string
     if (typeof err === 'string') {
       return err
     }
-
     return defaultMessage
   }
 
   // Actions
-  const register = async (email: string, password: string, firstName: string, lastName: string) => {
+  const register = async (email: string, password: string, captchaToken: string, firstName: string, lastName: string) => {
     try {
       isLoading.value = true
       error.value = null
 
-      const response = await authService.register(email, password, firstName, lastName)
+      const response = await authService.register(email, password, captchaToken, firstName, lastName)
 
       user.value = response.user
       token.value = response.token
@@ -67,20 +46,19 @@ export const useAuthStore = defineStore('auth', () => {
 
       return response
     } catch (err: unknown) {
-      const errorMessage = extractErrorMessage(err, 'Registration failed')
-      error.value = errorMessage
+      error.value = extractErrorMessage(err, 'Registration failed')
       throw err
     } finally {
       isLoading.value = false
     }
   }
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, captchaToken: string) => {
     try {
       isLoading.value = true
       error.value = null
 
-      const response = await authService.login(email, password)
+      const response = await authService.login(email, password, captchaToken)
 
       user.value = response.user
       token.value = response.token
@@ -90,8 +68,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       return response
     } catch (err: unknown) {
-      const errorMessage = extractErrorMessage(err, 'Login failed')
-      error.value = errorMessage
+      error.value = extractErrorMessage(err, 'Login failed')
       throw err
     } finally {
       isLoading.value = false
@@ -112,8 +89,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       return response
     } catch (err: unknown) {
-      const errorMessage = extractErrorMessage(err, 'Social login failed')
-      error.value = errorMessage
+      error.value = extractErrorMessage(err, 'Social Login failed')
       throw err
     } finally {
       isLoading.value = false

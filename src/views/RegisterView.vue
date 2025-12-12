@@ -14,8 +14,12 @@
                 v-model="registerForm.firstName"
                 placeholder="Max"
                 :disabled="authStore.isLoading"
+                :invalid="!!fieldErrors.firstName"
                 fluid
               />
+              <small v-if="fieldErrors.firstName" class="p-error">
+                {{ fieldErrors.firstName }}
+              </small>
             </div>
 
             <div class="form-group">
@@ -25,8 +29,12 @@
                 v-model="registerForm.lastName"
                 placeholder="Mustermann"
                 :disabled="authStore.isLoading"
+                :invalid="!!fieldErrors.lastName"
                 fluid
               />
+              <small v-if="fieldErrors.lastName" class="p-error">
+                {{ fieldErrors.lastName }}
+              </small>
             </div>
           </div>
 
@@ -38,8 +46,13 @@
               type="email"
               placeholder="max.mustermann@email.com"
               :disabled="authStore.isLoading"
+              :invalid="!!fieldErrors.email"
+              @input="clearFieldError('email')"
               fluid
             />
+            <small v-if="fieldErrors.email" class="p-error">
+              {{ fieldErrors.email }}
+            </small>
           </div>
 
           <div class="form-group">
@@ -48,9 +61,14 @@
               id="password"
               v-model="registerForm.password"
               :disabled="authStore.isLoading"
+              :invalid="!!fieldErrors.password"
+              @input="clearFieldError('password')"
               toggleMask
               fluid
             />
+            <small v-if="fieldErrors.password" class="p-error">
+              {{ fieldErrors.password }}
+            </small>
           </div>
 
           <div class="form-group">
@@ -60,6 +78,7 @@
               v-model="registerForm.confirmPassword"
               :disabled="authStore.isLoading"
               :feedback="false"
+              :invalid="!!passwordError"
               toggleMask
               fluid
             />
@@ -80,8 +99,9 @@
             </label>
           </div>
 
-          <Message v-if="authStore.error" severity="error" :closable="false">
-            {{ authStore.error }}
+          <!-- General error message (for errors that don't belong to a specific field) -->
+          <Message v-if="generalError" severity="error" :closable="false">
+            {{ generalError }}
           </Message>
 
           <Button
@@ -188,11 +208,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed } from 'vue'
+import { reactive, computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useI18n } from 'vue-i18n'
 import { useAuth0 } from '@auth0/auth0-vue'
+import { useReCaptcha } from 'vue-recaptcha-v3'
 import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
@@ -206,6 +227,8 @@ const authStore = useAuthStore()
 const { t } = useI18n()
 const auth0 = useAuth0()
 
+const recaptchaInstance = useReCaptcha()
+
 const registerForm = reactive({
   firstName: '',
   lastName: '',
@@ -214,6 +237,17 @@ const registerForm = reactive({
   confirmPassword: '',
   acceptTerms: false,
 })
+
+// Track field-specific errors
+const fieldErrors = reactive({
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+})
+
+// General error (for errors that don't belong to a specific field)
+const generalError = ref('')
 
 const passwordError = computed(() => {
   if (registerForm.confirmPassword && registerForm.password !== registerForm.confirmPassword) {
@@ -234,22 +268,86 @@ const isFormValid = computed(() => {
   )
 })
 
+// Clear a specific field error when user starts typing
+const clearFieldError = (field: keyof typeof fieldErrors) => {
+  fieldErrors[field] = ''
+  generalError.value = ''
+}
+
+// Clear all field errors
+const clearAllFieldErrors = () => {
+  fieldErrors.firstName = ''
+  fieldErrors.lastName = ''
+  fieldErrors.email = ''
+  fieldErrors.password = ''
+  generalError.value = ''
+}
+
+// Parse backend error and assign to appropriate field
+const handleErrorMessage = (errorMessage: string) => {
+  clearAllFieldErrors()
+
+  const lowerMessage = errorMessage.toLowerCase()
+
+  // Check for email-related errors
+  if (lowerMessage.includes('email') && lowerMessage.includes('already')) {
+    fieldErrors.email = errorMessage
+  } else if (lowerMessage.includes('email') && lowerMessage.includes('invalid')) {
+    fieldErrors.email = errorMessage
+  }
+  // Check for password-related errors
+  else if (lowerMessage.includes('password')) {
+    fieldErrors.password = errorMessage
+  }
+  // Check for first name errors
+  else if (lowerMessage.includes('first name') || lowerMessage.includes('firstname')) {
+    fieldErrors.firstName = errorMessage
+  }
+  // Check for last name errors
+  else if (lowerMessage.includes('last name') || lowerMessage.includes('lastname')) {
+    fieldErrors.lastName = errorMessage
+  }
+  // Default: show as general error
+  else {
+    generalError.value = errorMessage
+  }
+}
+
 const handleRegister = async () => {
   if (!isFormValid.value) {
     return
   }
 
+  clearAllFieldErrors()
+
+  if (!recaptchaInstance) {
+    console.error('reCAPTCHA not loaded')
+    return
+  }
+
+  await recaptchaInstance.recaptchaLoaded()
+
   try {
+    const token = await recaptchaInstance.executeRecaptcha('submit')
+
     await authStore.register(
       registerForm.email,
       registerForm.password,
+      token,
       registerForm.firstName,
       registerForm.lastName,
     )
     console.log('Registration successful')
     router.push('/personal-info')
-  } catch (error) {
+
+  } catch (error: any) {
     console.error('Registration failed:', error)
+
+    // Get the error message from the store or the error object
+    const errorMessage = authStore.error || error.message || 'Registration failed'
+
+    // Parse and assign the error to the appropriate field
+    handleErrorMessage(errorMessage)
   }
 }
 

@@ -132,7 +132,7 @@ const upcomingTournaments = ref<UpcomingTournament[]>([
     name: 'Oberösterr. Landesturnier',
     date: '20.04.2025',
     location: 'Dandorf, Güstrow',
-    registrationDeadline: 'Geben Sie 36',
+    registrationDeadline: '30.10.2025',
     canRegister: true,
   },
   {
@@ -144,6 +144,13 @@ const upcomingTournaments = ref<UpcomingTournament[]>([
   },
   {
     name: 'Freistädter Race',
+    date: '15.03.2026',
+    location: 'Dandorf, Güstrow',
+    registrationStart: '01.03.2026',
+    canRegister: false,
+  },
+  {
+    name: 'Neufelden Race',
     date: '15.03.2026',
     location: 'Dandorf, Güstrow',
     registrationStart: '01.03.2026',

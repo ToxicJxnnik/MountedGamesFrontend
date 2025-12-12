@@ -31,6 +31,12 @@
             />
           </div>
 
+          <div class="form-actions">
+            <router-link to="/forgot-password" class="forgot-password">
+              {{ $t('auth.forgotPassword') }}
+            </router-link>
+          </div>
+
           <Message v-if="authStore.error" severity="error" :closable="false">
             {{ authStore.error }}
           </Message>
@@ -131,8 +137,8 @@
           <p>
             {{ $t('auth.noAccount') }}
             <router-link to="/register" class="register-link-text">{{
-              $t('auth.registerNow')
-            }}</router-link>
+                $t('auth.registerNow')
+              }}</router-link>
           </p>
         </div>
       </template>
@@ -145,6 +151,7 @@ import { reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useAuth0 } from '@auth0/auth0-vue'
+import { useReCaptcha } from 'vue-recaptcha-v3'
 import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
@@ -155,6 +162,8 @@ import Divider from 'primevue/divider'
 const router = useRouter()
 const authStore = useAuthStore()
 const auth0 = useAuth0()
+
+const recaptchaInstance = useReCaptcha()
 
 const loginForm = reactive({
   email: '',
@@ -174,9 +183,17 @@ const handleLogin = async () => {
     return
   }
 
+  if (!recaptchaInstance) {
+    console.error('reCAPTCHA not loaded')
+    return
+  }
+
+  await recaptchaInstance.recaptchaLoaded()
+
   try {
+    const token = await recaptchaInstance.executeRecaptcha('submit')
     authStore.clearError()
-    await authStore.login(loginForm.email, loginForm.password)
+    await authStore.login(loginForm.email, loginForm.password, token)
     console.log('Login successful')
     router.push('/')
   } catch (error) {
@@ -240,6 +257,25 @@ const handleSocialSignIn = async (connection: string) => {
   color: #2c3e50;
   font-weight: 500;
   font-size: 0.9rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -0.5rem;
+}
+
+.forgot-password {
+  color: #4a90e2;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.forgot-password:hover {
+  color: #357abd;
+  text-decoration: underline;
 }
 
 .divider-text {

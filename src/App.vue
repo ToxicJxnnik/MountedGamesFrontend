@@ -3,20 +3,7 @@
   <div id="app">
     <!-- Status Bar -->
     <header class="status-bar">
-      <div class="status-left">
-        <div class="system-info">
-          <span class="server-status" :class="{ online: systemStatus.serverStatus === 'Online' }">
-            <span class="status-dot"></span>
-            {{ $t('app.serverStatus', { status: systemStatus.serverStatus }) }}
-          </span>
-          <span class="last-update">{{
-            $t('app.lastUpdate', { time: systemStatus.lastUpdate })
-          }}</span>
-          <span class="active-users">{{
-            $t('app.activeUsers', { count: systemStatus.activeUsers })
-          }}</span>
-        </div>
-      </div>
+      <div class="status-left"></div>
 
       <div class="status-center">
         <nav class="main-navigation">
@@ -195,6 +182,7 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })
+
 </script>
 
 <style scoped>
@@ -218,37 +206,6 @@ onUnmounted(() => {
   position: relative;
 }
 
-.status-left {
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.system-info {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-}
-
-.server-status {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 500;
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #e74c3c;
-  animation: pulse 2s infinite;
-}
-
-.server-status.online .status-dot {
-  background-color: #27ae60;
-}
-
 @keyframes pulse {
   0% {
     opacity: 1;
@@ -259,12 +216,6 @@ onUnmounted(() => {
   100% {
     opacity: 1;
   }
-}
-
-.last-update,
-.active-users {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.85rem;
 }
 
 .status-center {
@@ -377,6 +328,10 @@ onUnmounted(() => {
   border-bottom: 1px solid #e9ecef;
 }
 
+.status-left {
+  flex: 1;
+}
+
 .dropdown-user-info {
   display: flex;
   align-items: center;
@@ -487,7 +442,6 @@ onUnmounted(() => {
     padding: 1rem;
   }
 
-  .status-left,
   .status-center,
   .status-right {
     flex: none;
@@ -500,11 +454,6 @@ onUnmounted(() => {
 
   .status-right {
     justify-content: flex-start;
-  }
-
-  .system-info {
-    flex-wrap: wrap;
-    gap: 1rem;
   }
 
   .dropdown-menu {

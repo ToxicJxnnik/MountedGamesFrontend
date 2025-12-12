@@ -14,6 +14,16 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: () => import('../views/ForgotPasswordView.vue'),
+    },
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: () => import('../views/ResetPasswordView.vue'),
+    },
+    {
       path: '/register',
       name: 'register',
       component: () => import('../views/RegisterView.vue'),
@@ -27,26 +37,6 @@ const router = createRouter({
       path: '/personal-info',
       name: 'personal-info',
       component: () => import('../views/PersonalInfoView.vue'),
-    },
-    {
-      path: '/tournament-details',
-      name: 'tournament-details',
-      component: () => import('../views/TurnierDetail.vue'),
-    },
-    {
-      path: '/tournament-login',
-      name: 'tournament-login',
-      component: () => import('../views/LoginInTournament.vue'),
-    },
-    {
-      path: '/tournament-registration',
-      name: 'tournament-registration',
-      component: () => import('../views/TournamentRegistrationView.vue'),
-    },
-    {
-      path: '/scorer',
-      name: 'scorer',
-      component: () => import('../views/ScorerView.vue'),
     }
   ],
 })
